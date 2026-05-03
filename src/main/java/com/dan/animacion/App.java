@@ -1,7 +1,5 @@
 package com.dan.animacion;
 
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -15,7 +13,6 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener {
-    private float anguloRotacion = 0.0f;
     private float posicionX = 0.0f;
     private boolean moviendoDerecha = true;
 
@@ -59,20 +56,8 @@ public class App extends GLJPanel implements GLEventListener {
 
         gl.glTranslatef(posicionX, 0.0f, 0.0f);
 
-        gl.glRotatef(anguloRotacion, 0.0f, 0.0f, 1.0f);
-
-        gl.glColor3f(1.0f, 0.5f, 0f);
-        gl.glBegin(GL_QUADS);
-        gl.glVertex3f(-0.5f, -0.5f, 0.0f);
-        gl.glVertex3f(0.5f, -0.5f, 0.0f);
-        gl.glVertex3f(0.5f, 0.5f, 0.0f);
-        gl.glVertex3f(-0.5f, 0.5f, 0.0f);
-        gl.glEnd();
-
-        anguloRotacion += 1.5f;
-        if(anguloRotacion >= 360.0f) {
-            anguloRotacion = 0.0f;
-        }
+        gl.glColor3f(1.0f, 0.5f, 0.0f);
+        dibujarCirculo(gl, 0.5f , 50);
 
         if (moviendoDerecha) {
             posicionX += 0.05f;
@@ -85,4 +70,20 @@ public class App extends GLJPanel implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) { }
+
+    private void dibujarCirculo(GL2 gl, float radio, int segmentos) {
+        
+        gl.glBegin(GL2.GL_POLYGON); 
+        
+        for (int i = 0; i < segmentos; i++) {
+            double angulo = (2.0 * Math.PI * i) / segmentos;
+
+            float x = (float) (radio * Math.cos(angulo));
+            float y = (float) (radio * Math.sin(angulo));
+
+            gl.glVertex3f(x, y, 0.0f);
+        }
+        
+        gl.glEnd();
+    }
 }
