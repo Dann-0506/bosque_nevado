@@ -15,6 +15,7 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener {
+    private float anguloRotacion = 0.0f;
 
     public App() {
         this.addGLEventListener(this);
@@ -52,6 +53,10 @@ public class App extends GLJPanel implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
+        gl.glLoadIdentity();
+
+        gl.glRotatef(anguloRotacion, 0.0f, 0.0f, 1.0f);
+
         gl.glColor3f(1.0f, 0.5f, 0f);
         gl.glBegin(GL_QUADS);
         gl.glVertex3f(-0.5f, -0.5f, 0.0f);
@@ -59,6 +64,11 @@ public class App extends GLJPanel implements GLEventListener {
         gl.glVertex3f(0.5f, 0.5f, 0.0f);
         gl.glVertex3f(-0.5f, 0.5f, 0.0f);
         gl.glEnd();
+
+        anguloRotacion += 1.5f;
+        if(anguloRotacion >= 360.0f) {
+            anguloRotacion = 0.0f;
+        }
     }
 
     @Override
