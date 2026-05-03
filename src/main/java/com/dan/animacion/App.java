@@ -16,6 +16,8 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener {
     private float anguloRotacion = 0.0f;
+    private float posicionX = 0.0f;
+    private boolean moviendoDerecha = true;
 
     public App() {
         this.addGLEventListener(this);
@@ -55,6 +57,8 @@ public class App extends GLJPanel implements GLEventListener {
 
         gl.glLoadIdentity();
 
+        gl.glTranslatef(posicionX, 0.0f, 0.0f);
+
         gl.glRotatef(anguloRotacion, 0.0f, 0.0f, 1.0f);
 
         gl.glColor3f(1.0f, 0.5f, 0f);
@@ -68,6 +72,14 @@ public class App extends GLJPanel implements GLEventListener {
         anguloRotacion += 1.5f;
         if(anguloRotacion >= 360.0f) {
             anguloRotacion = 0.0f;
+        }
+
+        if (moviendoDerecha) {
+            posicionX += 0.05f;
+            if (posicionX > 1.0f) moviendoDerecha = false;
+        } else {
+            posicionX -= 0.05f;
+            if (posicionX < -1.0f) moviendoDerecha = true;
         }
     }
 
