@@ -62,9 +62,20 @@ public class Terreno {
         return total;
     }
 
+    private void asignarColorPorAltura(GL2 gl, float altura) {
+        if (altura > 15.0f) {
+            gl.glColor3f(1.0f, 1.0f, 1.0f);
+        } else if (altura > 8.0f) {
+            gl.glColor3f(0.6f, 0.6f, 0.65f);
+        } else if (altura > 0.0f) {
+            gl.glColor3f(0.2f, 0.4f, 0.2f);
+        } else {
+            gl.glColor3f(0.7f, 0.7f, 0.5f);
+        }
+    }
+
     public void dibujar(GL2 gl) {
-        gl.glColor3f(0.85f, 0.9f, 0.95f);
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE); 
+        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL); 
         gl.glBegin(GL2.GL_QUADS);
 
         for (int z = 0; z < verticesPorLado - 1; z++) {
@@ -77,13 +88,20 @@ public class Terreno {
                 float y3 = mapaAlturas[x + 1][z + 1];
                 float y4 = mapaAlturas[x][z + 1];
 
+                // Dibujamos el Quad asignando color vértice por vértice
+                asignarColorPorAltura(gl, y1);
                 gl.glVertex3f(mundoX, y1, mundoZ);
+
+                asignarColorPorAltura(gl, y2);
                 gl.glVertex3f(mundoX + tamanoCelda, y2, mundoZ);
+
+                asignarColorPorAltura(gl, y3);
                 gl.glVertex3f(mundoX + tamanoCelda, y3, mundoZ + tamanoCelda);
+
+                asignarColorPorAltura(gl, y4);
                 gl.glVertex3f(mundoX, y4, mundoZ + tamanoCelda);
             }
         }
         gl.glEnd();
-        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
     }
 }
