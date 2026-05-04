@@ -1,6 +1,8 @@
 package com.dan.animacion;
 
+import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.Terreno;
+import com.dan.animacion.utils.Constantes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,11 +21,9 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener, KeyListener {
-    private final float TAMANO_MUNDO = 100.0f;
-    private final float TAMANO_CELDA = 1.0f;
-
     private Terreno terreno;
-
+    private CicloDiaNoche ciclo;
+    
     private float camX = 0.0f;
     private float camY = -15.0f;
     private float camZ = -60.0f;
@@ -33,22 +33,19 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     public App() {
         this.addGLEventListener(this);
         this.addKeyListener(this);
-
         this.setFocusable(true);
         this.setFocusTraversalKeysEnabled(false);
 
-        this.terreno = new Terreno(TAMANO_MUNDO, TAMANO_CELDA);
+        this.terreno = new Terreno(Constantes.TAMANO_MUNDO, Constantes.TAMANO_CELDA);
+        this.ciclo = new CicloDiaNoche();
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             App canvas = new App();
             canvas.setPreferredSize(new Dimension(800, 600));
-
             FPSAnimator animator = new FPSAnimator(canvas, 60, true);
-
             JFrame frame = new JFrame("Bosque Nevado");
-
             frame.setLayout(new BorderLayout());
             frame.getContentPane().add(canvas, BorderLayout.CENTER);
             frame.pack();
@@ -61,11 +58,12 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        gl.glClearColor(0.05f, 0.05f, 0.15f, 1.0f); 
         
         gl.glEnable(GL.GL_DEPTH_TEST);
+
         gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_FLAT);
+        gl.glShadeModel(GL2.GL_FLAT);
+
         gl.glEnable(GL2.GL_LIGHT0);
 
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
@@ -78,15 +76,16 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     @Override
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
+
+        ciclo.actualizar();
+        ciclo.aplicarEntorno(gl);
+
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
-
+        
         gl.glTranslatef(camX, camY, camZ);
         gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-
-        float[] posicionLuz = { 0f, 15.0f, 0f, 0.0f }; 
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, posicionLuz, 0);
         
         terreno.dibujar(gl);
     }
@@ -95,46 +94,33 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
         GLU glu = new GLU();
-
         if (height <= 0) height = 1;
         final float aspecto = (float) width / (float) height;
-
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-
         glu.gluPerspective(45.0f, aspecto, 1.0, 100.0);
-
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
     }
 
-    @Override
-    public void keyTyped(java.awt.event.KeyEvent e) { }
-
-    @Override
-    public void keyPressed(java.awt.event.KeyEvent e) { }
+    @Override public void keyTyped(java.awt.event.KeyEvent e) { }
+    @Override public void keyPressed(java.awt.event.KeyEvent e) { }
 
     @Override
     public void keyReleased(java.awt.event.KeyEvent e) {
         float velocidad = 2.0f;
         float velocidadRotacion = 3.0f;
-
         switch (e.getKeyCode()) {
-            // --- MOVIMIENTO (WASD) ---
-            case KeyEvent.VK_W: camZ += velocidad; break; // Adelante
-            case KeyEvent.VK_S: camZ -= velocidad; break; // Atrás
-            case KeyEvent.VK_A: camX += velocidad; break; // Izquierda
-            case KeyEvent.VK_D: camX -= velocidad; break; // Derecha
-            
-            // --- ALTURA (Q y E) ---
-            case KeyEvent.VK_Q: camY -= velocidad; break; // Subir
-            case KeyEvent.VK_E: camY += velocidad; break; // Bajar
-
-            // --- ROTACIÓN DE CÁMARA (I, J, K, L) ---
-            case KeyEvent.VK_I: rotX -= velocidadRotacion; break; // Mirar arriba
-            case KeyEvent.VK_K: rotX += velocidadRotacion; break; // Mirar abajo
-            case KeyEvent.VK_J: rotY -= velocidadRotacion; break; // Girar izquierda
-            case KeyEvent.VK_L: rotY += velocidadRotacion; break; // Girar derecha
+            case KeyEvent.VK_W: camZ += velocidad; break;
+            case KeyEvent.VK_S: camZ -= velocidad; break;
+            case KeyEvent.VK_A: camX += velocidad; break;
+            case KeyEvent.VK_D: camX -= velocidad; break;
+            case KeyEvent.VK_Q: camY -= velocidad; break;
+            case KeyEvent.VK_E: camY += velocidad; break;
+            case KeyEvent.VK_I: rotX -= velocidadRotacion; break;
+            case KeyEvent.VK_K: rotX += velocidadRotacion; break;
+            case KeyEvent.VK_J: rotY -= velocidadRotacion; break;
+            case KeyEvent.VK_L: rotY += velocidadRotacion; break;
         }
     }
 }
