@@ -72,7 +72,7 @@ public class Panel extends GLJPanel implements KeyListener, MouseMotionListener 
 
         if (deltaX == 0 && deltaY == 0) return; 
 
-        camara.procesarRaton(deltaX, deltaY);
+        camara.acumularMovimientoRaton(deltaX, deltaY);
         centrarRaton();
     }
 

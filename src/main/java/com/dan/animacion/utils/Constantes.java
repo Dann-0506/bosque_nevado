@@ -6,7 +6,7 @@ public final class Constantes {
 
     // --- CONFIGURACIÓN DEL MUNDO ---
     public static final float TAMANO_MUNDO = 100.0f;
-    public static final float TAMANO_CELDA = 0.5f;
+    public static final float TAMANO_CELDA = 1.0f;
     
 
     // --- GENERACIÓN DEL TERRENO ---
