@@ -32,13 +32,32 @@ public class Camara {
     }
 
     public void procesarEntrada() {
-        if (teclasActivas[KeyEvent.VK_W]) z += velocidad;
-        if (teclasActivas[KeyEvent.VK_S]) z -= velocidad;
-        if (teclasActivas[KeyEvent.VK_A]) x += velocidad;
-        if (teclasActivas[KeyEvent.VK_D]) x -= velocidad;
+        float yawRad = (float) Math.toRadians(rotY);
 
-        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad;
-        if (teclasActivas[KeyEvent.VK_E]) y += velocidad;
+        float sinYaw = (float) Math.sin(yawRad);
+        float cosYaw = (float) Math.cos(yawRad);
+
+        if (teclasActivas[KeyEvent.VK_W]) {
+            x -= sinYaw * velocidad;
+            z += cosYaw * velocidad;
+
+        }
+        if (teclasActivas[KeyEvent.VK_S]) {
+            x += sinYaw * velocidad;
+            z -= cosYaw * velocidad;
+        }
+
+        if (teclasActivas[KeyEvent.VK_A]) {
+            x += cosYaw * velocidad;
+            z += sinYaw * velocidad;
+        }
+        if (teclasActivas[KeyEvent.VK_D]) {
+            x -= cosYaw * velocidad; 
+            z -= sinYaw * velocidad;
+        }
+
+        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad; // Subir
+        if (teclasActivas[KeyEvent.VK_E]) y += velocidad; // Bajar
     }
 
     public void aplicarTransformaciones(GL2 gl) {
