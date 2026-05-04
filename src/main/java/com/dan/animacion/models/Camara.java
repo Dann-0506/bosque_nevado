@@ -12,11 +12,18 @@ public class Camara {
     private float velocidad = 0.5f; 
 
     private float sensibilidadRaton = 0.1f;
+    private float mouseDeltaX = 0;
+    private float mouseDeltaY = 0;
 
     public Camara(float startX, float startY, float startZ) {
         this.x = startX;
         this.y = startY;
         this.z = startZ;
+    }
+
+    public void acumularMovimientoRaton(float dx, float dy) {
+        this.mouseDeltaX += dx;
+        this.mouseDeltaY += dy;
     }
 
     public void registrarTeclaPresionada(int keyCode) {
@@ -32,6 +39,17 @@ public class Camara {
     }
 
     public void procesarEntrada() {
+        if (mouseDeltaX != 0 || mouseDeltaY != 0) {
+            rotY += mouseDeltaX * sensibilidadRaton;
+            rotX += mouseDeltaY * sensibilidadRaton;
+            
+            if (rotX > 90.0f) rotX = 90.0f;
+            if (rotX < -90.0f) rotX = -90.0f;
+
+            mouseDeltaX = 0;
+            mouseDeltaY = 0;
+        }
+
         float yawRad = (float) Math.toRadians(rotY);
 
         float sinYaw = (float) Math.sin(yawRad);
