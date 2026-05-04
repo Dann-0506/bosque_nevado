@@ -10,7 +10,6 @@ public class Camara {
     private boolean[] teclasActivas = new boolean[256];
 
     private float velocidad = 0.5f; 
-    private float velocidadRotacion = 1.0f;
 
     private float sensibilidadRaton = 0.1f;
 
