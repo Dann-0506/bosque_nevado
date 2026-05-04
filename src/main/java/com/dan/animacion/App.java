@@ -1,10 +1,13 @@
 package com.dan.animacion;
 
+import com.dan.animacion.models.Terreno;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -13,11 +16,14 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener {
-    private float posicionX = 0.0f;
-    private boolean moviendoDerecha = true;
+    private final float TAMANO_MUNDO = 20.0f;
+    private final float TAMANO_CELDA = 0.5f;
+
+    private Terreno terreno;
 
     public App() {
         this.addGLEventListener(this);
+        this.terreno = new Terreno(TAMANO_MUNDO, TAMANO_CELDA);
     }
 
     public static void main(String[] args) {
@@ -27,7 +33,7 @@ public class App extends GLJPanel implements GLEventListener {
 
             FPSAnimator animator = new FPSAnimator(canvas, 60, true);
 
-            JFrame frame = new JFrame("Proyecto graficación");
+            JFrame frame = new JFrame("Bosque Nevado");
             frame.setLayout(new BorderLayout());
             frame.getContentPane().add(canvas, BorderLayout.CENTER);
             frame.pack();
@@ -54,36 +60,28 @@ public class App extends GLJPanel implements GLEventListener {
 
         gl.glLoadIdentity();
 
-        gl.glTranslatef(posicionX, 0.0f, 0.0f);
+        float distanciaCamara = -(TAMANO_MUNDO + 5.0f);
 
-        gl.glColor3f(1.0f, 0.5f, 0.0f);
-        dibujarCirculo(gl, 0.5f , 50);
+        gl.glTranslatef(0.0f, 5.0f, distanciaCamara);
+        gl.glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
 
-        if (moviendoDerecha) {
-            posicionX += 0.05f;
-            if (posicionX > 1.0f) moviendoDerecha = false;
-        } else {
-            posicionX -= 0.05f;
-            if (posicionX < -1.0f) moviendoDerecha = true;
-        }
+        terreno.dibujar(gl);
     }
 
     @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) { }
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        GL2 gl = drawable.getGL().getGL2();
+        GLU glu = new GLU();
 
-    private void dibujarCirculo(GL2 gl, float radio, int segmentos) {
-        
-        gl.glBegin(GL2.GL_POLYGON); 
-        
-        for (int i = 0; i < segmentos; i++) {
-            double angulo = (2.0 * Math.PI * i) / segmentos;
+        if (height <= 0) height = 1;
+        final float aspecto = (float) width / (float) height;
 
-            float x = (float) (radio * Math.cos(angulo));
-            float y = (float) (radio * Math.sin(angulo));
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
 
-            gl.glVertex3f(x, y, 0.0f);
-        }
-        
-        gl.glEnd();
+        glu.gluPerspective(45.0f, aspecto, 1.0, 100.0);
+
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
     }
 }
