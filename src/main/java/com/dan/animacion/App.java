@@ -1,5 +1,6 @@
 package com.dan.animacion;
 
+import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.Terreno;
 
 import java.awt.BorderLayout;
@@ -23,6 +24,7 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     private final float TAMANO_CELDA = 1.0f;
 
     private Terreno terreno;
+    private CicloDiaNoche cicloDiaNoche;
 
     private float camX = 0.0f;
     private float camY = -15.0f;
@@ -38,6 +40,7 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
         this.setFocusTraversalKeysEnabled(false);
 
         this.terreno = new Terreno(TAMANO_MUNDO, TAMANO_CELDA);
+        this.cicloDiaNoche = new CicloDiaNoche();
     }
 
     public static void main(String[] args) {
@@ -61,7 +64,6 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        gl.glClearColor(0.05f, 0.05f, 0.15f, 1.0f); 
         
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_LIGHTING);
@@ -78,15 +80,16 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     @Override
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
+        
+        cicloDiaNoche.actualizar();
+        cicloDiaNoche.aplicarEntorno(gl);
+        
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
         gl.glTranslatef(camX, camY, camZ);
         gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-
-        float[] posicionLuz = { 0f, 15.0f, 0f, 0.0f }; 
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, posicionLuz, 0);
         
         terreno.dibujar(gl);
     }
