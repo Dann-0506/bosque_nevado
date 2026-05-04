@@ -12,6 +12,8 @@ public class Camara {
     private float velocidad = 0.5f; 
     private float velocidadRotacion = 1.0f;
 
+    private float sensibilidadRaton = 0.1f;
+
     public Camara(float startX, float startY, float startZ) {
         this.x = startX;
         this.y = startY;
@@ -38,16 +40,19 @@ public class Camara {
 
         if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad;
         if (teclasActivas[KeyEvent.VK_E]) y += velocidad;
-
-        if (teclasActivas[KeyEvent.VK_I]) rotX -= velocidadRotacion;
-        if (teclasActivas[KeyEvent.VK_K]) rotX += velocidadRotacion;
-        if (teclasActivas[KeyEvent.VK_J]) rotY -= velocidadRotacion;
-        if (teclasActivas[KeyEvent.VK_L]) rotY += velocidadRotacion;
     }
 
     public void aplicarTransformaciones(GL2 gl) {
         gl.glTranslatef(x, y, z);
         gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
+    }
+
+    public void procesarRaton(float deltaX, float deltaY) {
+        rotY += deltaX * sensibilidadRaton;
+        rotX += deltaY * sensibilidadRaton; 
+
+        if (rotX > 90.0f) rotX = 90.0f;
+        if (rotX < -90.0f) rotX = -90.0f;
     }
 }

@@ -8,11 +8,19 @@ import com.dan.animacion.utils.Constantes;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.Robot;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.Cursor;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -20,28 +28,40 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class App extends GLJPanel implements GLEventListener, KeyListener {
+public class App extends GLJPanel implements GLEventListener, KeyListener, MouseMotionListener {
     private Terreno terreno;
     private CicloDiaNoche ciclo;
+
     private Camara camara;
+    private Robot robot;
+    private boolean mouseCapturado = false;
 
     public App() {
         this.addGLEventListener(this);
         this.addKeyListener(this);
+        this.addMouseMotionListener(this);
+
         this.setFocusable(true);
         this.setFocusTraversalKeysEnabled(false);
 
         this.terreno = new Terreno(Constantes.TAMANO_MUNDO, Constantes.TAMANO_CELDA);
         this.ciclo = new CicloDiaNoche();
-
         this.camara = new Camara(0.0f, -15.0f, -60.0f);
+
+        try {
+            robot = new Robot();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             App canvas = new App();
             canvas.setPreferredSize(new Dimension(800, 600));
+
             FPSAnimator animator = new FPSAnimator(canvas, 60, true);
+
             JFrame frame = new JFrame("Bosque Nevado");
             frame.setLayout(new BorderLayout());
             frame.getContentPane().add(canvas, BorderLayout.CENTER);
@@ -99,11 +119,66 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
         gl.glLoadIdentity();
     }
 
+    // Manejo de teclado
     @Override public void keyTyped(java.awt.event.KeyEvent e) { }
-    
+
     @Override 
-    public void keyPressed(java.awt.event.KeyEvent e) {camara.registrarTeclaPresionada(e.getKeyCode());}
+    public void keyPressed(java.awt.event.KeyEvent e) {
+        camara.registrarTeclaPresionada(e.getKeyCode());
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            alternarCapturaRaton();
+        }
+    }
 
     @Override
-    public void keyReleased(java.awt.event.KeyEvent e) {camara.registrarTeclaSoltada(e.getKeyCode());}
+    public void keyReleased(java.awt.event.KeyEvent e) {
+        camara.registrarTeclaSoltada(e.getKeyCode());
+    }
+
+
+    // Manejo de Ratón
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        mouseMoved(e);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if (!mouseCapturado) return;
+
+        int centroX = this.getWidth() / 2;
+        int centroY = this.getHeight() / 2;
+
+        int deltaX = e.getX() - centroX;
+        int deltaY = e.getY() - centroY;
+
+        if (deltaX == 0 && deltaY == 0) return; 
+
+        camara.procesarRaton(deltaX, deltaY);
+
+        centrarRaton();
+    }
+
+
+    private void alternarCapturaRaton() {
+        mouseCapturado = !mouseCapturado;
+        if (mouseCapturado) {
+            BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+            Cursor cursorInvisible = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "Cursor Invisible");
+            this.setCursor(cursorInvisible);
+            centrarRaton();
+        } else {
+            this.setCursor(Cursor.getDefaultCursor());
+        }
+    }
+
+    private void centrarRaton() {
+        if (robot != null && this.isShowing()) {
+            Point localizacionVentana = this.getLocationOnScreen();
+            int centroX = localizacionVentana.x + this.getWidth() / 2;
+            int centroY = localizacionVentana.y + this.getHeight() / 2;
+
+            robot.mouseMove(centroX, centroY);
+        }
+    }
 }
