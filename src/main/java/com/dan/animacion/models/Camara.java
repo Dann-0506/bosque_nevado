@@ -42,9 +42,10 @@ public class Camara {
     }
 
     public void aplicarTransformaciones(GL2 gl) {
+        gl.glRotated(rotX, 1.0f, 0.0f, 0.0f);
+        gl.glRotated(rotY, 0.0f, 1.0f, 0.0f);
+        
         gl.glTranslatef(x, y, z);
-        gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
     }
 
     public void procesarRaton(float deltaX, float deltaY) {
