@@ -38,8 +38,20 @@ public class Terreno {
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
     }
 
-    private float calcularAltura (float x, float z) {
-        float altura = (float) ((Math.sin(x * 0.1) + Math.cos(z * 0.1)) * 1.8);
-        return altura;
+    private float calcularAltura(float x, float z) {
+        float alturaTotal = 0.0f;
+        float amplitud = 1.0f;
+        float frecuencia = 0.1f;
+        int octavas = 4;
+
+        for (int i = 0; i < octavas; i++) {
+            float onda = (float) (Math.sin(x * frecuencia) + Math.cos(z * frecuencia)) * amplitud;
+            alturaTotal += onda;
+
+            amplitud *= 0.5f;
+            frecuencia *= 2.0f;
+        }
+
+        return alturaTotal;
     }
 }
