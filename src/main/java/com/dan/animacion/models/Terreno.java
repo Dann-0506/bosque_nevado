@@ -21,14 +21,25 @@ public class Terreno {
 
         for (float z = -tamanoMalla; z < tamanoMalla; z += tamanoCelda) {
             for (float x = -tamanoMalla; x < tamanoMalla; x += tamanoCelda) {
-                gl.glVertex3f(x, 0.0f, z);
-                gl.glVertex3f(x + tamanoCelda, 0.0f, z);
-                gl.glVertex3f(x + tamanoCelda, 0.0f, z + tamanoCelda);
-                gl.glVertex3f(x, 0.0f, z + tamanoCelda);
+
+                float y1 = calcularAltura(x, z);
+                float y2 = calcularAltura(x + tamanoCelda, z);
+                float y3 = calcularAltura(x + tamanoCelda, z + tamanoCelda);
+                float y4 = calcularAltura(x, z + tamanoCelda);
+
+                gl.glVertex3f(x, y1, z);
+                gl.glVertex3f(x + tamanoCelda, y2, z);
+                gl.glVertex3f(x + tamanoCelda, y3, z + tamanoCelda);
+                gl.glVertex3f(x, y4, z + tamanoCelda);
             }
         }
         gl.glEnd();
 
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
+    }
+
+    private float calcularAltura (float x, float z) {
+        float altura = (float) ((Math.sin(x * 0.1) + Math.cos(z * 0.1)) * 1.8);
+        return altura;
     }
 }
