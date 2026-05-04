@@ -1,5 +1,6 @@
 package com.dan.animacion;
 
+import com.dan.animacion.models.Camara;
 import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.Terreno;
 import com.dan.animacion.utils.Constantes;
@@ -12,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -23,12 +23,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class App extends GLJPanel implements GLEventListener, KeyListener {
     private Terreno terreno;
     private CicloDiaNoche ciclo;
-    
-    private float camX = 0.0f;
-    private float camY = -15.0f;
-    private float camZ = -60.0f;
-    private float rotX = 25.0f;
-    private float rotY = 0.0f;
+    private Camara camara;
 
     public App() {
         this.addGLEventListener(this);
@@ -38,6 +33,8 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
 
         this.terreno = new Terreno(Constantes.TAMANO_MUNDO, Constantes.TAMANO_CELDA);
         this.ciclo = new CicloDiaNoche();
+
+        this.camara = new Camara(0.0f, -15.0f, -60.0f);
     }
 
     public static void main(String[] args) {
@@ -83,10 +80,9 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
         
-        gl.glTranslatef(camX, camY, camZ);
-        gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-        
+        camara.procesarEntrada();
+        camara.aplicarTransformaciones(gl);
+
         terreno.dibujar(gl);
     }
 
@@ -104,23 +100,10 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     }
 
     @Override public void keyTyped(java.awt.event.KeyEvent e) { }
-    @Override public void keyPressed(java.awt.event.KeyEvent e) { }
+    
+    @Override 
+    public void keyPressed(java.awt.event.KeyEvent e) {camara.registrarTeclaPresionada(e.getKeyCode());}
 
     @Override
-    public void keyReleased(java.awt.event.KeyEvent e) {
-        float velocidad = 2.0f;
-        float velocidadRotacion = 3.0f;
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W: camZ += velocidad; break;
-            case KeyEvent.VK_S: camZ -= velocidad; break;
-            case KeyEvent.VK_A: camX += velocidad; break;
-            case KeyEvent.VK_D: camX -= velocidad; break;
-            case KeyEvent.VK_Q: camY -= velocidad; break;
-            case KeyEvent.VK_E: camY += velocidad; break;
-            case KeyEvent.VK_I: rotX -= velocidadRotacion; break;
-            case KeyEvent.VK_K: rotX += velocidadRotacion; break;
-            case KeyEvent.VK_J: rotY -= velocidadRotacion; break;
-            case KeyEvent.VK_L: rotY += velocidadRotacion; break;
-        }
-    }
+    public void keyReleased(java.awt.event.KeyEvent e) {camara.registrarTeclaSoltada(e.getKeyCode());}
 }
