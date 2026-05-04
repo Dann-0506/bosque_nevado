@@ -4,10 +4,13 @@ import com.dan.animacion.models.Terreno;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyListener;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -15,14 +18,25 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class App extends GLJPanel implements GLEventListener {
-    private final float TAMANO_MUNDO = 20.0f;
+public class App extends GLJPanel implements GLEventListener, KeyListener {
+    private final float TAMANO_MUNDO = 50.0f;
     private final float TAMANO_CELDA = 0.5f;
 
     private Terreno terreno;
 
+    private float camX = 0.0f;
+    private float camY = -15.0f;
+    private float camZ = -60.0f;
+    private float rotX = 25.0f;
+    private float rotY = 0.0f;
+
     public App() {
         this.addGLEventListener(this);
+        this.addKeyListener(this);
+
+        this.setFocusable(true);
+        this.setFocusTraversalKeysEnabled(false);
+
         this.terreno = new Terreno(TAMANO_MUNDO, TAMANO_CELDA);
     }
 
@@ -34,12 +48,12 @@ public class App extends GLJPanel implements GLEventListener {
             FPSAnimator animator = new FPSAnimator(canvas, 60, true);
 
             JFrame frame = new JFrame("Bosque Nevado");
+
             frame.setLayout(new BorderLayout());
             frame.getContentPane().add(canvas, BorderLayout.CENTER);
             frame.pack();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
-
             animator.start();
         });
     }
@@ -48,6 +62,7 @@ public class App extends GLJPanel implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClearColor(0.05f, 0.05f, 0.15f, 1.0f); 
+        gl.glEnable(GL.GL_DEPTH_TEST);
     }
 
     @Override
@@ -57,14 +72,12 @@ public class App extends GLJPanel implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
         gl.glLoadIdentity();
 
-        float distanciaCamara = -((TAMANO_MUNDO * 2) + 5.0f);
-
-        gl.glTranslatef(0.0f, 2.0f, distanciaCamara);
-        gl.glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
-
+        gl.glTranslatef(camX, camY, camZ);
+        gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
+        
         terreno.dibujar(gl);
     }
 
@@ -83,5 +96,35 @@ public class App extends GLJPanel implements GLEventListener {
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+    }
+
+    @Override
+    public void keyTyped(java.awt.event.KeyEvent e) { }
+
+    @Override
+    public void keyPressed(java.awt.event.KeyEvent e) { }
+
+    @Override
+    public void keyReleased(java.awt.event.KeyEvent e) {
+        float velocidad = 2.0f;
+        float velocidadRotacion = 3.0f;
+
+        switch (e.getKeyCode()) {
+            // --- MOVIMIENTO (WASD) ---
+            case KeyEvent.VK_W: camZ += velocidad; break; // Adelante
+            case KeyEvent.VK_S: camZ -= velocidad; break; // Atrás
+            case KeyEvent.VK_A: camX += velocidad; break; // Izquierda
+            case KeyEvent.VK_D: camX -= velocidad; break; // Derecha
+            
+            // --- ALTURA (Q y E) ---
+            case KeyEvent.VK_Q: camY -= velocidad; break; // Subir
+            case KeyEvent.VK_E: camY += velocidad; break; // Bajar
+
+            // --- ROTACIÓN DE CÁMARA (I, J, K, L) ---
+            case KeyEvent.VK_I: rotX -= velocidadRotacion; break; // Mirar arriba
+            case KeyEvent.VK_K: rotX += velocidadRotacion; break; // Mirar abajo
+            case KeyEvent.VK_J: rotY -= velocidadRotacion; break; // Girar izquierda
+            case KeyEvent.VK_L: rotY += velocidadRotacion; break; // Girar derecha
+        }
     }
 }
