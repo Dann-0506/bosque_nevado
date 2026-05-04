@@ -60,9 +60,9 @@ public class App extends GLJPanel implements GLEventListener {
 
         gl.glLoadIdentity();
 
-        float distanciaCamara = -(TAMANO_MUNDO + 5.0f);
+        float distanciaCamara = -((TAMANO_MUNDO * 2) + 5.0f);
 
-        gl.glTranslatef(0.0f, 5.0f, distanciaCamara);
+        gl.glTranslatef(0.0f, 2.0f, distanciaCamara);
         gl.glRotatef(20.0f, 1.0f, 0.0f, 0.0f);
 
         terreno.dibujar(gl);
