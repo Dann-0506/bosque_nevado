@@ -33,33 +33,35 @@ public class Terreno {
     }
 
     private float calcularAlturaComposicion(float x, float z) {
-        float alturaBase = calcularFBM(x, z, 4, 0.05f, 3.0f);
+        float escalaGlobal = 0.015f; 
 
-        float radioMontana = 15.0f;
-        float distCentro = (float) Math.sqrt(Math.pow(x - 10, 2) + Math.pow(z + 10, 2));
-        float mascaraMontana = Math.max(0, radioMontana - distCentro) / radioMontana;
-        float alturaMontana = mascaraMontana * 18.0f * Math.abs(calcularFBM(x, z, 3, 0.1f, 1.0f));
+        float ruidoFBM = calcularFBM(x, z, 5, escalaGlobal, 1.0f);
 
-        float ruidoRio = Math.abs(RuidoSimplex.evaluar(x * 0.03f, z * 0.03f));
-        float profundidadRio = 0.0f;
-        if (ruidoRio < 0.08f) {
-            profundidadRio = (0.08f - ruidoRio) * 40.0f;
-        }
+        float ruidoNormalizado = (ruidoFBM + 1.0f) / 2.0f;
 
-        return alturaBase + alturaMontana - profundidadRio;
+        float exponente = 2.5f; 
+        float relieveConErosion = (float) Math.pow(ruidoNormalizado, exponente);
+
+        float alturaMaxima = 35.0f;
+        
+        return relieveConErosion * alturaMaxima;
     }
 
     private float calcularFBM(float x, float z, int octavas, float frecuenciaBase, float amplitudBase) {
         float total = 0;
         float amplitud = amplitudBase;
         float frecuencia = frecuenciaBase;
+        float amplitudMaxima = 0;
 
         for (int i = 0; i < octavas; i++) {
             total += RuidoSimplex.evaluar(x * frecuencia, z * frecuencia) * amplitud;
-            amplitud *= 0.5f;
+            amplitudMaxima += amplitud;
+
+            amplitud *= 0.45f; 
             frecuencia *= 2.0f;
         }
-        return total;
+
+        return total / amplitudMaxima; 
     }
 
     private void asignarColorPorAltura(GL2 gl, float altura) {
@@ -88,7 +90,6 @@ public class Terreno {
                 float y3 = mapaAlturas[x + 1][z + 1];
                 float y4 = mapaAlturas[x][z + 1];
 
-                // Dibujamos el Quad asignando color vértice por vértice
                 asignarColorPorAltura(gl, y1);
                 gl.glVertex3f(mundoX, y1, mundoZ);
 
