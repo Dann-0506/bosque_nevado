@@ -40,18 +40,24 @@ public class Terreno {
 
     private float calcularAltura(float x, float z) {
         float alturaTotal = 0.0f;
-        float amplitud = 1.0f;
+        float amplitud = 10.0f;
         float frecuencia = 0.1f;
         int octavas = 4;
 
         for (int i = 0; i < octavas; i++) {
             float onda = (float) (Math.sin(x * frecuencia) + Math.cos(z * frecuencia)) * amplitud;
             alturaTotal += onda;
-
             amplitud *= 0.5f;
             frecuencia *= 2.0f;
         }
 
-        return alturaTotal;
+        float mascara = 0.0f;
+        if (z <= 0) {
+            mascara = (z * -1) / tamanoMalla; 
+        } else {
+            mascara = 0.0f;
+        }
+
+        return alturaTotal * mascara;
     }
 }
