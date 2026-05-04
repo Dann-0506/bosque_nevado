@@ -1,20 +1,20 @@
 package com.dan.animacion.models;
 
+import com.dan.animacion.utils.Constantes;
+
 import com.jogamp.opengl.GL2;
 
 public class CicloDiaNoche {
-    private float tiempo = 0.0f;
-    private float velocidadTiempo = 0.005f;
+    private float tiempo = 0.0f; 
 
     public void actualizar() {
-        tiempo += velocidadTiempo;
+        tiempo += Constantes.VELOCIDAD_TIEMPO;
         if (tiempo > Math.PI * 2) {
             tiempo -= (float) (Math.PI * 2);
         }
     }
 
     public void aplicarEntorno(GL2 gl) {
-
         float solX = (float) Math.cos(tiempo);
         float solY = (float) Math.sin(tiempo);
         float solZ = 0.5f; 
@@ -22,36 +22,34 @@ public class CicloDiaNoche {
         float[] posicionLuz = { solX, solY, solZ, 0.0f };
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, posicionLuz, 0);
 
-        float[] colorCielo = new float[3];
-        float[] colorSol = new float[3];
-        float[] colorAmbiente = new float[3];
+        float[] colorCielo;
+        float[] colorSol;
+        float[] colorAmbiente;
 
         if (solY > 0.3f) {
-
-            colorCielo = new float[]{ 0.4f, 0.6f, 0.9f };
-            colorSol = new float[]{ 1.0f, 1.0f, 0.9f };
-            colorAmbiente = new float[]{ 0.4f, 0.4f, 0.45f };
+            colorCielo = Constantes.CIELO_DIA;
+            colorSol = Constantes.SOL_DIA;
+            colorAmbiente = Constantes.AMBIENTE_DIA;
         } 
         else if (solY >= 0.0f) {
-            float t = solY / 0.3f;
-            colorCielo = mezclarColores(new float[]{0.8f, 0.4f, 0.2f}, new float[]{0.4f, 0.6f, 0.9f}, t);
-            colorSol = mezclarColores(new float[]{1.0f, 0.5f, 0.2f}, new float[]{1.0f, 1.0f, 0.9f}, t);
-            colorAmbiente = mezclarColores(new float[]{0.2f, 0.1f, 0.1f}, new float[]{0.4f, 0.4f, 0.45f}, t);
+            float t = solY / 0.3f; 
+            colorCielo = mezclarColores(Constantes.CIELO_ATARDECER, Constantes.CIELO_DIA, t);
+            colorSol = mezclarColores(Constantes.SOL_ATARDECER, Constantes.SOL_DIA, t);
+            colorAmbiente = mezclarColores(Constantes.AMBIENTE_ATARDECER, Constantes.AMBIENTE_DIA, t);
         } 
         else if (solY >= -0.3f) {
-            float t = (solY + 0.3f) / 0.3f;
-            colorCielo = mezclarColores(new float[]{0.05f, 0.05f, 0.15f}, new float[]{0.8f, 0.4f, 0.2f}, t);
-            colorSol = mezclarColores(new float[]{0.1f, 0.1f, 0.3f}, new float[]{1.0f, 0.5f, 0.2f}, t);
-            colorAmbiente = mezclarColores(new float[]{0.05f, 0.05f, 0.1f}, new float[]{0.2f, 0.1f, 0.1f}, t);
+            float t = (solY + 0.3f) / 0.3f; 
+            colorCielo = mezclarColores(Constantes.CIELO_NOCHE, Constantes.CIELO_ATARDECER, t);
+            colorSol = mezclarColores(Constantes.SOL_NOCHE, Constantes.SOL_ATARDECER, t);
+            colorAmbiente = mezclarColores(Constantes.AMBIENTE_NOCHE, Constantes.AMBIENTE_ATARDECER, t);
         } 
         else {
-            // PLENA NOCHE
-            colorCielo = new float[]{ 0.05f, 0.05f, 0.15f };
-            colorSol = new float[]{ 0.1f, 0.1f, 0.3f };
-            colorAmbiente = new float[]{ 0.05f, 0.05f, 0.1f };
+            colorCielo = Constantes.CIELO_NOCHE;
+            colorSol = Constantes.SOL_NOCHE;
+            colorAmbiente = Constantes.AMBIENTE_NOCHE;
         }
 
-        gl.glClearColor(colorCielo[0], colorCielo[1], colorCielo[2], 1.0f);
+        gl.glClearColor(colorCielo[0], colorCielo[1], colorCielo[2], 1.0f); 
 
         float[] difusa = { colorSol[0], colorSol[1], colorSol[2], 1.0f };
         float[] ambiente = { colorAmbiente[0], colorAmbiente[1], colorAmbiente[2], 1.0f };
