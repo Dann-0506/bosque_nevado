@@ -76,31 +76,84 @@ public class Terreno {
         }
     }
 
+    private float[] calcularNormal(float x1, float y1, float z1,
+                                   float x2, float y2, float z2,
+                                   float x3, float y3, float z3) {
+        float ux = x2 - x1;
+        float uy = y2 - y1;
+        float uz = z2 - z1;
+
+        float vx = x3 - x1;
+        float vy = y3 - y1;
+        float vz = z3 - z1;
+
+        float nx = (uy * vz) - (uz * vy);
+        float ny = (uz * vx) - (ux * vz);
+        float nz = (ux * vy) - (uy * vx);
+
+        // Normalizar el vector
+        float longitud = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+        if (longitud == 0) return new float[]{0, 1, 0};
+
+        return new float[]{nx / longitud, ny / longitud, nz / longitud};
+    }
+
     public void dibujar(GL2 gl) {
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL); 
-        gl.glBegin(GL2.GL_QUADS);
+        gl.glBegin(GL2.GL_TRIANGLES); 
 
         for (int z = 0; z < verticesPorLado - 1; z++) {
             for (int x = 0; x < verticesPorLado - 1; x++) {
                 float mundoX = -tamanoMalla + (x * tamanoCelda);
                 float mundoZ = -tamanoMalla + (z * tamanoCelda);
 
-                float y1 = mapaAlturas[x][z];
-                float y2 = mapaAlturas[x + 1][z];
-                float y3 = mapaAlturas[x + 1][z + 1];
-                float y4 = mapaAlturas[x][z + 1];
+                float y1 = mapaAlturas[x][z];           // Superior Izquierda
+                float y2 = mapaAlturas[x + 1][z];       // Superior Derecha
+                float y3 = mapaAlturas[x + 1][z + 1];   // Inferior Derecha
+                float y4 = mapaAlturas[x][z + 1];       // Inferior Izquierda
+
+                // ==========================================================
+                // TRIÁNGULO 1: Mitad izquierda de la celda
+                // Vértices: Superior Izq -> Inferior Izq -> Superior Der
+                // ==========================================================
+                float[] normalT1 = calcularNormal(
+                    mundoX, y1, mundoZ,
+                    mundoX, y4, mundoZ + tamanoCelda,
+                    mundoX + tamanoCelda, y2, mundoZ
+                );
+
+                gl.glNormal3f(normalT1[0], normalT1[1], normalT1[2]);
 
                 asignarColorPorAltura(gl, y1);
                 gl.glVertex3f(mundoX, y1, mundoZ);
 
+                asignarColorPorAltura(gl, y4);
+                gl.glVertex3f(mundoX, y4, mundoZ + tamanoCelda);
+
                 asignarColorPorAltura(gl, y2);
                 gl.glVertex3f(mundoX + tamanoCelda, y2, mundoZ);
+
+
+                // ==========================================================
+                // TRIÁNGULO 2: Mitad derecha de la celda
+                // Vértices: Inferior Izq -> Inferior Der -> Superior Der
+                // ==========================================================
+                float[] normalT2 = calcularNormal(
+                    mundoX, y4, mundoZ + tamanoCelda,
+                    mundoX + tamanoCelda, y3, mundoZ + tamanoCelda,
+                    mundoX + tamanoCelda, y2, mundoZ
+                );
+
+                gl.glNormal3f(normalT2[0], normalT2[1], normalT2[2]);
+
+                asignarColorPorAltura(gl, y4);
+                gl.glVertex3f(mundoX, y4, mundoZ + tamanoCelda);
 
                 asignarColorPorAltura(gl, y3);
                 gl.glVertex3f(mundoX + tamanoCelda, y3, mundoZ + tamanoCelda);
 
-                asignarColorPorAltura(gl, y4);
-                gl.glVertex3f(mundoX, y4, mundoZ + tamanoCelda);
+                asignarColorPorAltura(gl, y2);
+                gl.glVertex3f(mundoX + tamanoCelda, y2, mundoZ);
             }
         }
         gl.glEnd();

@@ -19,8 +19,8 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class App extends GLJPanel implements GLEventListener, KeyListener {
-    private final float TAMANO_MUNDO = 50.0f;
-    private final float TAMANO_CELDA = 0.5f;
+    private final float TAMANO_MUNDO = 100.0f;
+    private final float TAMANO_CELDA = 1.0f;
 
     private Terreno terreno;
 
@@ -62,7 +62,14 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClearColor(0.05f, 0.05f, 0.15f, 1.0f); 
+        
         gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_FLAT);
+        gl.glEnable(GL2.GL_LIGHT0);
+
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
+        gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE);
     }
 
     @Override
@@ -77,6 +84,9 @@ public class App extends GLJPanel implements GLEventListener, KeyListener {
         gl.glTranslatef(camX, camY, camZ);
         gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
+
+        float[] posicionLuz = { 0f, 15.0f, 0f, 0.0f }; 
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, posicionLuz, 0);
         
         terreno.dibujar(gl);
     }
