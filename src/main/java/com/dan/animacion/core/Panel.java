@@ -19,6 +19,7 @@ public class Panel extends GLJPanel implements KeyListener, MouseMotionListener 
     private Camara camara;
     private Robot robot;
     private boolean mouseCapturado = false;
+    private boolean ignorarProximoMovimiento = false;
 
     public Panel() {
         this.camara = new Camara(0.0f, -15.0f, -60.0f);
@@ -65,14 +66,20 @@ public class Panel extends GLJPanel implements KeyListener, MouseMotionListener 
     public void mouseMoved(MouseEvent e) {
         if (!mouseCapturado) return;
 
+        if (ignorarProximoMovimiento) {
+            ignorarProximoMovimiento = false;
+            return;
+        }
+
         int centroX = this.getWidth() / 2;
         int centroY = this.getHeight() / 2;
         int deltaX = e.getX() - centroX;
         int deltaY = e.getY() - centroY;
 
-        if (deltaX == 0 && deltaY == 0) return; 
+        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
 
-        camara.procesarRaton(deltaX, deltaY);
+        camara.acumularMovimientoRaton(deltaX, deltaY);
+        ignorarProximoMovimiento = true;
         centrarRaton();
     }
 

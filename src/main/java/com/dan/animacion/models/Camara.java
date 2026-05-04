@@ -12,11 +12,18 @@ public class Camara {
     private float velocidad = 0.5f; 
 
     private float sensibilidadRaton = 0.1f;
+    private float mouseDeltaX = 0;
+    private float mouseDeltaY = 0;
 
     public Camara(float startX, float startY, float startZ) {
         this.x = startX;
         this.y = startY;
         this.z = startZ;
+    }
+
+    public void acumularMovimientoRaton(float dx, float dy) {
+        this.mouseDeltaX += dx;
+        this.mouseDeltaY += dy;
     }
 
     public void registrarTeclaPresionada(int keyCode) {
@@ -32,13 +39,43 @@ public class Camara {
     }
 
     public void procesarEntrada() {
-        if (teclasActivas[KeyEvent.VK_W]) z += velocidad;
-        if (teclasActivas[KeyEvent.VK_S]) z -= velocidad;
-        if (teclasActivas[KeyEvent.VK_A]) x += velocidad;
-        if (teclasActivas[KeyEvent.VK_D]) x -= velocidad;
+        if (mouseDeltaX != 0 || mouseDeltaY != 0) {
+            rotY += mouseDeltaX * sensibilidadRaton;
+            rotX += mouseDeltaY * sensibilidadRaton;
+            
+            if (rotX > 90.0f) rotX = 90.0f;
+            if (rotX < -90.0f) rotX = -90.0f;
 
-        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad;
-        if (teclasActivas[KeyEvent.VK_E]) y += velocidad;
+            mouseDeltaX = 0;
+            mouseDeltaY = 0;
+        }
+
+        float yawRad = (float) Math.toRadians(rotY);
+
+        float sinYaw = (float) Math.sin(yawRad);
+        float cosYaw = (float) Math.cos(yawRad);
+
+        if (teclasActivas[KeyEvent.VK_W]) {
+            x -= sinYaw * velocidad;
+            z += cosYaw * velocidad;
+
+        }
+        if (teclasActivas[KeyEvent.VK_S]) {
+            x += sinYaw * velocidad;
+            z -= cosYaw * velocidad;
+        }
+
+        if (teclasActivas[KeyEvent.VK_A]) {
+            x += cosYaw * velocidad;
+            z += sinYaw * velocidad;
+        }
+        if (teclasActivas[KeyEvent.VK_D]) {
+            x -= cosYaw * velocidad; 
+            z -= sinYaw * velocidad;
+        }
+
+        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad; // Subir
+        if (teclasActivas[KeyEvent.VK_E]) y += velocidad; // Bajar
     }
 
     public void aplicarTransformaciones(GL2 gl) {

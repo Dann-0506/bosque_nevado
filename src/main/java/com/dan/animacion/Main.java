@@ -13,7 +13,7 @@ public class Main {
             Panel lienzo = new Panel();
             lienzo.setPreferredSize(new Dimension(800, 600));
 
-            FPSAnimator animator = new FPSAnimator(lienzo, 60, true);
+            FPSAnimator animator = new FPSAnimator(lienzo, 30, true);
 
             JFrame frame = new JFrame("Bosque Nevado");
             frame.setLayout(new BorderLayout());
