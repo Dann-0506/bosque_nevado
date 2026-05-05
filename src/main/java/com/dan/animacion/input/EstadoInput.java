@@ -1,6 +1,6 @@
 package com.dan.animacion.input;
 
-public class EstadoEntrada {
+public class EstadoInput {
     public final boolean[] teclas = new boolean[512];
     public float mouseDeltaX = 0;
     public float mouseDeltaY = 0;

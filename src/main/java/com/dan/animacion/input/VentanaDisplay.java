@@ -6,8 +6,8 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 
-public class Panel implements KeyListener, MouseListener {
-    private final EstadoEntrada estado;
+public class VentanaDisplay implements KeyListener, MouseListener {
+    private final EstadoInput estado;
     private final GLWindow window;
 
     private boolean mouseCapturado = true;
@@ -15,7 +15,7 @@ public class Panel implements KeyListener, MouseListener {
     private boolean primerMovimiento = true;
     private boolean ignorarWarp = false;
 
-    public Panel(EstadoEntrada estado, GLWindow window) {
+    public VentanaDisplay(EstadoInput estado, GLWindow window) {
         this.estado = estado;
         this.window = window;
     }

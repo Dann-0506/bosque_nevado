@@ -46,19 +46,21 @@ src/main/java/com/dan/animacion/
 ├── core/
 │   └── Escena.java              — GLEventListener, orquesta la lógica y el render
 ├── input/
-│   ├── EstadoEntrada.java       — estado compartido de teclado y mouse
-│   └── Panel.java               — listeners de teclado y mouse
+│   ├── EstadoInput.java         — estado compartido de teclado y mouse
+│   └── VentanaDisplay.java      — listeners de teclado y mouse
 ├── models/
-│   ├── Camara.java              — posición, rotación y movimiento de la cámara
-│   ├── Terreno.java             — generación procedural del heightmap y el bosque
 │   ├── Arbol.java               — datos de posición y escala de cada árbol
-│   └── CicloDiaNoche.java       — estado del sol y colores de iluminación
+│   ├── Camara.java              — posición, rotación y movimiento de la cámara
+│   ├── CicloDiaNoche.java       — estado del sol y colores de iluminación
+│   ├── SistemaNieve             — sistema de generacion de las particulas para la nieve
+│   └── Terreno.java             — generación procedural del heightmap y el bosque
 ├── render/
-│   ├── RendererEntorno.java     — aplica iluminación y color de cielo a OpenGL
+│   ├── RendererAmbiente.java    — dibuja los elementos del cielo y del ambiente
+│   ├── RendererNieve.java       — dibuja las particulas de nieve antes de la iluminación
 │   └── RendererTerreno.java     — dibuja la malla del terreno y los árboles
 └── utils/
     ├── Constantes.java          — todos los parámetros configurables del proyecto
-    └── RuidoSimplex.java        — generador de ruido Simplex 2D
+    └── RuidoSimplex.java        — generador de ruido Simplex 2D de ken Perlin
 ```
 
 ## Generación procedural

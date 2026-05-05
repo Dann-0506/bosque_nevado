@@ -1,11 +1,11 @@
 package com.dan.animacion.core;
 
-import com.dan.animacion.input.EstadoEntrada;
+import com.dan.animacion.input.EstadoInput;
 import com.dan.animacion.models.Camara;
 import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.SistemaNieve;
 import com.dan.animacion.models.Terreno;
-import com.dan.animacion.render.RendererEntorno;
+import com.dan.animacion.render.RendererAmbiente;
 import com.dan.animacion.render.RendererNieve;
 import com.dan.animacion.render.RendererTerreno;
 import com.dan.animacion.utils.Constantes;
@@ -17,21 +17,21 @@ import com.jogamp.opengl.glu.GLU;
 
 public class Escena implements GLEventListener {
     private final Camara camara;
-    private final EstadoEntrada estadoEntrada;
+    private final EstadoInput estadoEntrada;
     private final Terreno terreno;
     private final CicloDiaNoche ciclo;
     private final SistemaNieve nieve;
-    private final RendererEntorno rendererEntorno;
+    private final RendererAmbiente rendererEntorno;
     private final RendererTerreno rendererTerreno;
     private final RendererNieve rendererNieve;
 
-    public Escena(Camara camara, EstadoEntrada estadoEntrada) {
+    public Escena(Camara camara, EstadoInput estadoEntrada) {
         this.camara = camara;
         this.estadoEntrada = estadoEntrada;
         this.terreno = new Terreno(Constantes.TAMANO_MUNDO, Constantes.TAMANO_CELDA);
         this.ciclo = new CicloDiaNoche();
         this.nieve = new SistemaNieve(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
-        this.rendererEntorno = new RendererEntorno();
+        this.rendererEntorno = new RendererAmbiente();
         this.rendererTerreno = new RendererTerreno();
         this.rendererNieve = new RendererNieve();
     }

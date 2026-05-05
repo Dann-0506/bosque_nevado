@@ -6,7 +6,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
-public class RendererEntorno {
+public class RendererAmbiente {
     private GLU glu = new GLU();
 
     public void prepararCielo(GL2 gl, CicloDiaNoche ciclo) {
