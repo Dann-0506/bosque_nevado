@@ -54,6 +54,11 @@ public class Escena implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
 
+        if (estadoEntrada.salirSolicitado) {
+            drawable.destroy();
+            return;
+        }
+
         ciclo.actualizar();
         camara.procesarEntrada(estadoEntrada);
         if (camara.isModoSuelo()) {

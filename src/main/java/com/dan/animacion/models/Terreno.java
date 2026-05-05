@@ -82,9 +82,9 @@ public class Terreno {
         return total / amplitudMaxima;
     }
 
-    public float getTamanoMalla()      { return tamanoMalla; }
-    public float getTamanoCelda()      { return tamanoCelda; }
-    public int getVerticesPorLado()    { return verticesPorLado; }
-    public float[][] getMapaAlturas()  { return mapaAlturas; }
-    public List<Arbol> getBosque()     { return Collections.unmodifiableList(bosque); }
+    public float getTamanoMalla() {return tamanoMalla;}
+    public float getTamanoCelda() {return tamanoCelda;}
+    public int getVerticesPorLado() {return verticesPorLado;}
+    public float[][] getMapaAlturas() {return mapaAlturas;}
+    public List<Arbol> getBosque() {return Collections.unmodifiableList(bosque);}
 }

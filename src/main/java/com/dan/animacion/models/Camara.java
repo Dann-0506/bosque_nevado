@@ -46,11 +46,11 @@ public class Camara {
         y = -(alturaTerreno + Constantes.ALTURA_OJO);
     }
 
-    public boolean isModoSuelo() { return modoSuelo; }
+    public boolean isModoSuelo() {return modoSuelo;}
 
-    public float getMundoX() { return -x; }
-    public float getMundoY() { return -y; }
-    public float getMundoZ() { return -z; }
+    public float getMundoX() {return -x;}
+    public float getMundoY() {return -y;}
+    public float getMundoZ() {return -z;}
 
     public void aplicarTransformaciones(GL2 gl) {
         gl.glRotated(rotX, 1.0, 0.0, 0.0);
