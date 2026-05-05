@@ -27,7 +27,7 @@ public class Escena implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_LIGHTING);
-        gl.glShadeModel(GL2.GL_FLAT);
+        gl.glShadeModel(GL2.GL_SMOOTH);
         gl.glEnable(GL2.GL_LIGHT0);
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE);

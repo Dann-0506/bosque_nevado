@@ -3,6 +3,10 @@ package com.dan.animacion.models;
 import com.dan.animacion.utils.Constantes;
 import com.dan.animacion.utils.RuidoSimplex;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
@@ -11,6 +15,7 @@ public class Terreno {
     private float tamanoCelda;
     private float[][] mapaAlturas;
     private int verticesPorLado;
+    private List<Arbol> bosque;
 
     public Terreno (float tamanoMalla, float tamanoCelda) {
         this.tamanoMalla = tamanoMalla;
@@ -18,6 +23,39 @@ public class Terreno {
         this.verticesPorLado = (int) ((tamanoMalla * 2) / tamanoCelda) + 1;
         this.mapaAlturas = new float[verticesPorLado][verticesPorLado];
         generarMapa();
+
+        this.bosque = new ArrayList<>();
+        poblarBosque(Constantes.CANTIDAD_ARBOLES);
+    }
+
+    private void poblarBosque(int cantidadArboles) {
+        Random rand = new Random();
+        int arbolesGenerados = 0;
+        int intentos = 0;
+
+        while (arbolesGenerados < cantidadArboles && intentos < Constantes.MAX_INTENTOS_BOSQUE) {
+            intentos++;
+
+            float x = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
+            float z = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
+
+            float densidadBosque = RuidoSimplex.evaluar(
+                x * Constantes.ESCALA_DENSIDAD_BOSQUE + Constantes.OFFSET_RUIDO_BOSQUE,
+                z * Constantes.ESCALA_DENSIDAD_BOSQUE + Constantes.OFFSET_RUIDO_BOSQUE
+            );
+
+            if (densidadBosque < Constantes.UMBRAL_DENSIDAD_BOSQUE) {
+                continue;
+            }
+
+            float y = calcularAlturaComposicion(x, z);
+
+            if (y > Constantes.ALTURA_MIN_BOSQUE && y < Constantes.ALTURA_MAX_BOSQUE) {
+                float escalaAleatoria = 0.6f + (rand.nextFloat() * 0.8f);
+                bosque.add(new Arbol(x, y, z, escalaAleatoria));
+                arbolesGenerados++;
+            }
+        }
     }
 
     private void generarMapa() {
@@ -123,5 +161,8 @@ public class Terreno {
             }
         }
         gl.glEnd();
+        for (Arbol pino : bosque) {
+            pino.dibujar(gl);
+        }
     }
 }
