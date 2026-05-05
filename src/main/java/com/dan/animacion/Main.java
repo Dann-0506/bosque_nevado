@@ -4,6 +4,7 @@ import com.dan.animacion.core.Escena;
 import com.dan.animacion.input.EstadoEntrada;
 import com.dan.animacion.input.Panel;
 import com.dan.animacion.models.Camara;
+
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;

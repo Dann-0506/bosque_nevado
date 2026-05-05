@@ -35,14 +35,14 @@ public class SistemaNieve {
     }
 
     private void spawnaleatorio(int i, float cx, float cy, float cz) {
-        px[i]  = cx + (rand.nextFloat() * 2 - 1) * Constantes.RADIO_NIEVE;
-        pz[i]  = cz + (rand.nextFloat() * 2 - 1) * Constantes.RADIO_NIEVE;
-        py[i]  = cy + rand.nextFloat() * Constantes.ALTURA_NIEVE;
+        px[i] = cx + (rand.nextFloat() * 2 - 1) * Constantes.RADIO_NIEVE;
+        pz[i] = cz + (rand.nextFloat() * 2 - 1) * Constantes.RADIO_NIEVE;
+        py[i] = cy + rand.nextFloat() * Constantes.ALTURA_NIEVE;
         fase[i] = rand.nextFloat() * (float) (Math.PI * 2);
     }
 
-    public int     getCantidad() { return N; }
-    public float[] getPx()       { return px; }
-    public float[] getPy()       { return py; }
-    public float[] getPz()       { return pz; }
+    public int getCantidad() {return N;}
+    public float[] getPx() {return px;}
+    public float[] getPy() {return py;}
+    public float[] getPz() {return pz;}
 }

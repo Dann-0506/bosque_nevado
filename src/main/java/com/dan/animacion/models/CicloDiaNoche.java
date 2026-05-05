@@ -8,7 +8,7 @@ public class CicloDiaNoche {
     private float[] colorCielo;
     private float[] colorSol;
     private float[] colorAmbiente;
-    private float[] posicionSol = { 1.0f, 0.0f, 0.5f, 0.0f };
+    private float[] posicionSol = {1.0f, 0.0f, 0.5f, 0.0f};
 
     public CicloDiaNoche() {
         colorCielo = Constantes.CIELO_DIA.clone();

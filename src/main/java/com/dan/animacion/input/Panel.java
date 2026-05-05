@@ -23,7 +23,10 @@ public class Panel implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         estado.registrarTeclaPresionada(e.getKeyCode());
-        if (e.getKeyCode() == KeyEvent.VK_M || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            estado.salirSolicitado = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_M) {
             mouseCapturado = !mouseCapturado;
             window.setPointerVisible(!mouseCapturado);
             window.confinePointer(mouseCapturado);
@@ -37,10 +40,10 @@ public class Panel implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) { procesarMouse(e); }
+    public void mouseMoved(MouseEvent e) {procesarMouse(e);}
 
     @Override
-    public void mouseDragged(MouseEvent e) { procesarMouse(e); }
+    public void mouseDragged(MouseEvent e) {procesarMouse(e);}
 
     private void procesarMouse(MouseEvent e) {
         if (!mouseCapturado) return;
@@ -77,10 +80,10 @@ public class Panel implements KeyListener, MouseListener {
         }
     }
 
-    @Override public void mouseClicked(MouseEvent e) { }
-    @Override public void mouseEntered(MouseEvent e) { }
-    @Override public void mouseExited(MouseEvent e) { }
-    @Override public void mousePressed(MouseEvent e) { }
-    @Override public void mouseReleased(MouseEvent e) { }
-    @Override public void mouseWheelMoved(MouseEvent e) { }
+    @Override public void mouseClicked(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseWheelMoved(MouseEvent e) {}
 }

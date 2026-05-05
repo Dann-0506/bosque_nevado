@@ -6,13 +6,25 @@ Desarrollada en Java con OpenGL (pipeline fijo, GL2) usando JOGL y ventanas NEWT
 
 ## Controles
 
+### Movimiento
+
 | Tecla | Acción |
 |-------|--------|
 | W / S | Avanzar / Retroceder |
 | A / D | Desplazarse lateralmente |
-| Q / E | Bajar / Subir |
+| Q / E | Bajar / Subir *(solo en modo libre)* |
 | Mouse | Mirar alrededor |
-| M / ESC | Capturar o liberar el cursor |
+
+### Modos y sistema
+
+| Tecla | Acción |
+|-------|--------|
+| Tab | Alternar modo suelo / modo libre |
+| M | Capturar o liberar el cursor |
+| Escape | Cerrar la aplicación |
+
+**Modo suelo** (por defecto): la cámara se mantiene a nivel del terreno como si caminara sobre él.  
+**Modo libre**: vuelo sin restricciones, con `Q`/`E` para bajar y subir.
 
 ## Requisitos
 
