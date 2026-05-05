@@ -1,6 +1,7 @@
 package com.dan.animacion.render;
 
 import com.dan.animacion.models.CicloDiaNoche;
+import com.dan.animacion.utils.Constantes;
 import com.jogamp.opengl.GL2;
 
 public class RendererEntorno {
@@ -11,6 +12,9 @@ public class RendererEntorno {
         float[] ambiente = ciclo.getColorAmbiente();
 
         gl.glClearColor(cielo[0], cielo[1], cielo[2], 1.0f);
+
+        gl.glFogfv(GL2.GL_FOG_COLOR, new float[]{ cielo[0], cielo[1], cielo[2], 1.0f }, 0);
+        gl.glFogf(GL2.GL_FOG_DENSITY, Constantes.DENSIDAD_NIEBLA);
 
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION,
             ciclo.getPosicionSol(), 0);
