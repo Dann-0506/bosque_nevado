@@ -55,22 +55,28 @@ public class RendererTerreno {
 
     private void dibujarArbol(GL2 gl, Arbol arbol) {
         gl.glPushMatrix();
+        
         gl.glTranslatef(arbol.x, arbol.y, arbol.z);
         gl.glScalef(arbol.escala, arbol.escala, arbol.escala);
+        
         dibujarTronco(gl);
         dibujarFollaje(gl);
+        
         gl.glPopMatrix();
     }
 
     private void dibujarTronco(GL2 gl) {
         float ancho = 0.2f;
         float alto = 1.0f;
+        
         gl.glColor3f(0.4f, 0.2f, 0.0f);
         gl.glBegin(GL2.GL_QUADS);
+        
         gl.glNormal3f( 0, 0,  1); gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(ancho, 0, ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(-ancho, alto, ancho);
         gl.glNormal3f( 0, 0, -1); gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, alto, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, 0, -ancho);
         gl.glNormal3f(-1, 0,  0); gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(-ancho, alto, ancho); gl.glVertex3f(-ancho, alto, -ancho);
         gl.glNormal3f( 1, 0,  0); gl.glVertex3f(ancho, 0, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(ancho, 0, ancho);
+        
         gl.glEnd();
     }
 
@@ -109,11 +115,15 @@ public class RendererTerreno {
                                    float x3, float y3, float z3) {
         float ux = x2 - x1, uy = y2 - y1, uz = z2 - z1;
         float vx = x3 - x1, vy = y3 - y1, vz = z3 - z1;
+
         float nx = uy * vz - uz * vy;
         float ny = uz * vx - ux * vz;
         float nz = ux * vy - uy * vx;
+
         float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+
         if (len == 0) return new float[]{ 0, 1, 0 };
+
         return new float[]{ nx / len, ny / len, nz / len };
     }
 }

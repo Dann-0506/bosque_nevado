@@ -4,6 +4,7 @@ import com.dan.animacion.core.Escena;
 import com.dan.animacion.input.EstadoEntrada;
 import com.dan.animacion.input.Panel;
 import com.dan.animacion.models.Camara;
+
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
@@ -20,7 +21,7 @@ public class Main {
         window.setFullscreen(true);
 
         EstadoEntrada estadoEntrada = new EstadoEntrada();
-        Camara camara = new Camara(0.0f, -15.0f, -60.0f);
+        Camara camara = new Camara(-18.9f, -10.0f, -31.2f);
         Escena escena = new Escena(camara, estadoEntrada);
         Panel controlador = new Panel(estadoEntrada, window);
 
