@@ -1,87 +1,42 @@
 package com.dan.animacion.models;
 
-import com.jogamp.opengl.GL2;
+import com.dan.animacion.input.EstadoEntrada;
+import com.dan.animacion.utils.Constantes;
 import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.opengl.GL2;
 
 public class Camara {
     private float x, y, z;
     private float rotX, rotY;
 
-    private boolean[] teclasActivas = new boolean[512];
-
-    private float velocidad = 0.5f; 
-
-    private float sensibilidadRaton = 0.1f;
-    private float mouseDeltaX = 0;
-    private float mouseDeltaY = 0;
-
-    public Camara(float startX, float startY, float startZ) {
-        this.x = startX;
-        this.y = startY;
-        this.z = startZ;
+    public Camara(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    public void acumularMovimientoRaton(float dx, float dy) {
-        this.mouseDeltaX += dx;
-        this.mouseDeltaY += dy;
-    }
-
-    public void registrarTeclaPresionada(int keyCode) {
-        if (keyCode >= 0 && keyCode < 512) {
-            teclasActivas[keyCode] = true;
-        }
-    }
-
-    public void registrarTeclaSoltada(int keyCode) {
-        if (keyCode >= 0 && keyCode < 512) {
-            teclasActivas[keyCode] = false;
-        }
-    }
-
-    public void procesarEntrada() {
-        if (mouseDeltaX != 0 || mouseDeltaY != 0) {
-            rotY += mouseDeltaX * sensibilidadRaton;
-            rotX += mouseDeltaY * sensibilidadRaton;
-            
-            if (rotX > 90.0f) rotX = 90.0f;
-            if (rotX < -90.0f) rotX = -90.0f;
-
-            mouseDeltaX = 0;
-            mouseDeltaY = 0;
-        }
+    public void procesarEntrada(EstadoEntrada estado) {
+        rotY += estado.mouseDeltaX * Constantes.SENSIBILIDAD_RATON;
+        rotX += estado.mouseDeltaY * Constantes.SENSIBILIDAD_RATON;
+        rotX = Math.max(-90.0f, Math.min(90.0f, rotX));
+        estado.mouseDeltaX = 0;
+        estado.mouseDeltaY = 0;
 
         float yawRad = (float) Math.toRadians(rotY);
+        float sin = (float) Math.sin(yawRad);
+        float cos = (float) Math.cos(yawRad);
 
-        float sinYaw = (float) Math.sin(yawRad);
-        float cosYaw = (float) Math.cos(yawRad);
-
-        if (teclasActivas[KeyEvent.VK_W]) {
-            x -= sinYaw * velocidad;
-            z += cosYaw * velocidad;
-
-        }
-        if (teclasActivas[KeyEvent.VK_S]) {
-            x += sinYaw * velocidad;
-            z -= cosYaw * velocidad;
-        }
-
-        if (teclasActivas[KeyEvent.VK_A]) {
-            x += cosYaw * velocidad;
-            z += sinYaw * velocidad;
-        }
-        if (teclasActivas[KeyEvent.VK_D]) {
-            x -= cosYaw * velocidad; 
-            z -= sinYaw * velocidad;
-        }
-
-        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad;
-        if (teclasActivas[KeyEvent.VK_E]) y += velocidad;
+        if (estado.teclas[KeyEvent.VK_W]) { x -= sin * Constantes.VELOCIDAD_CAMARA; z += cos * Constantes.VELOCIDAD_CAMARA; }
+        if (estado.teclas[KeyEvent.VK_S]) { x += sin * Constantes.VELOCIDAD_CAMARA; z -= cos * Constantes.VELOCIDAD_CAMARA; }
+        if (estado.teclas[KeyEvent.VK_A]) { x += cos * Constantes.VELOCIDAD_CAMARA; z += sin * Constantes.VELOCIDAD_CAMARA; }
+        if (estado.teclas[KeyEvent.VK_D]) { x -= cos * Constantes.VELOCIDAD_CAMARA; z -= sin * Constantes.VELOCIDAD_CAMARA; }
+        if (estado.teclas[KeyEvent.VK_Q]) y -= Constantes.VELOCIDAD_CAMARA;
+        if (estado.teclas[KeyEvent.VK_E]) y += Constantes.VELOCIDAD_CAMARA;
     }
 
     public void aplicarTransformaciones(GL2 gl) {
-        gl.glRotated(rotX, 1.0f, 0.0f, 0.0f);
-        gl.glRotated(rotY, 0.0f, 1.0f, 0.0f);
-        
+        gl.glRotated(rotX, 1.0, 0.0, 0.0);
+        gl.glRotated(rotY, 0.0, 1.0, 0.0);
         gl.glTranslatef(x, y, z);
     }
 }
