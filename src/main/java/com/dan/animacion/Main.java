@@ -1,30 +1,36 @@
 package com.dan.animacion;
 
+import com.dan.animacion.core.Escena;
 import com.dan.animacion.core.Panel;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import com.dan.animacion.models.Camara;
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Panel lienzo = new Panel();
-            lienzo.setPreferredSize(new Dimension(800, 600));
+        GLProfile profile = GLProfile.get(GLProfile.GL2);
+        GLCapabilities caps = new GLCapabilities(profile);
 
-            FPSAnimator animator = new FPSAnimator(lienzo, 30, true);
+        GLWindow window = GLWindow.create(caps);
+        window.setTitle("Bosque Nevado - Motor NEWT");
+        window.setSize(800, 600);
+        window.setFullscreen(true);
 
-            JFrame frame = new JFrame("Bosque Nevado");
-            frame.setLayout(new BorderLayout());
-            frame.getContentPane().add(lienzo, BorderLayout.CENTER);
-            frame.pack();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Camara camara = new Camara(0.0f, -15.0f, -60.0f);
+        Escena escena = new Escena(camara);
+        Panel controlador = new Panel(camara, window);
 
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            
-            frame.setVisible(true);
-            animator.start();
-        });
+        window.addGLEventListener(escena);
+        window.addKeyListener(controlador);
+        window.addMouseListener(controlador);
+
+        window.setVisible(true);
+        window.setPointerVisible(false);
+        window.confinePointer(true);
+
+        FPSAnimator animator = new FPSAnimator(window, 30, true);
+        animator.start();
     }
 }

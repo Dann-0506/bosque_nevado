@@ -1,13 +1,13 @@
 package com.dan.animacion.models;
 
 import com.jogamp.opengl.GL2;
-import java.awt.event.KeyEvent;
+import com.jogamp.newt.event.KeyEvent;
 
 public class Camara {
     private float x, y, z;
     private float rotX, rotY;
 
-    private boolean[] teclasActivas = new boolean[256];
+    private boolean[] teclasActivas = new boolean[512];
 
     private float velocidad = 0.5f; 
 
@@ -27,13 +27,13 @@ public class Camara {
     }
 
     public void registrarTeclaPresionada(int keyCode) {
-        if (keyCode >= 0 && keyCode < 256) {
+        if (keyCode >= 0 && keyCode < 512) {
             teclasActivas[keyCode] = true;
         }
     }
 
     public void registrarTeclaSoltada(int keyCode) {
-        if (keyCode >= 0 && keyCode < 256) {
+        if (keyCode >= 0 && keyCode < 512) {
             teclasActivas[keyCode] = false;
         }
     }
@@ -74,8 +74,8 @@ public class Camara {
             z -= sinYaw * velocidad;
         }
 
-        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad; // Subir
-        if (teclasActivas[KeyEvent.VK_E]) y += velocidad; // Bajar
+        if (teclasActivas[KeyEvent.VK_Q]) y -= velocidad;
+        if (teclasActivas[KeyEvent.VK_E]) y += velocidad;
     }
 
     public void aplicarTransformaciones(GL2 gl) {
@@ -83,13 +83,5 @@ public class Camara {
         gl.glRotated(rotY, 0.0f, 1.0f, 0.0f);
         
         gl.glTranslatef(x, y, z);
-    }
-
-    public void procesarRaton(float deltaX, float deltaY) {
-        rotY += deltaX * sensibilidadRaton;
-        rotX += deltaY * sensibilidadRaton; 
-
-        if (rotX > 90.0f) rotX = 90.0f;
-        if (rotX < -90.0f) rotX = -90.0f;
     }
 }
