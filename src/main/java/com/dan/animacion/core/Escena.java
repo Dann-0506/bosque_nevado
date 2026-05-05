@@ -56,6 +56,10 @@ public class Escena implements GLEventListener {
 
         ciclo.actualizar();
         camara.procesarEntrada(estadoEntrada);
+        if (camara.isModoSuelo()) {
+            float h = terreno.calcularAltura(camara.getMundoX(), camara.getMundoZ());
+            camara.ajustarAlSuelo(h);
+        }
         nieve.actualizar(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
         rendererEntorno.prepararCielo(gl, ciclo);
