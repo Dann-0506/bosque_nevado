@@ -5,12 +5,12 @@ public final class Constantes {
     private Constantes() {}
 
     // --- CONFIGURACIÓN DEL MUNDO ---
-    public static final float TAMANO_MUNDO = 100.0f;
+    public static final float TAMANO_MUNDO = 200.0f;
     public static final float TAMANO_CELDA = 1.0f;
     
 
     // --- GENERACIÓN DEL TERRENO ---
-    public static final float ALTURA_MAXIMA_TERRENO = 35.0f;
+    public static final float ALTURA_MAXIMA_TERRENO = 50.0f;
     public static final int OCTAVAS_RUIDO = 5;
     public static final float ESCALA_RUIDO = 0.015f;
     public static final float EXPONENTE_EROSION = 2.5f;
@@ -27,6 +27,16 @@ public final class Constantes {
     public static final float[] COLOR_ARENA = {0.7f, 0.7f, 0.5f};
 
 
+    // --- GENERACIÓN DEL BOSQUE ---
+    public static final int CANTIDAD_ARBOLES = 2000;
+    public static final int MAX_INTENTOS_BOSQUE = 40000;
+    public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
+    public static final float UMBRAL_DENSIDAD_BOSQUE = 0.0f;
+    public static final float OFFSET_RUIDO_BOSQUE = 500.0f;
+    public static final float ALTURA_MIN_BOSQUE = NIVEL_PASTO + 1.0f;
+    public static final float ALTURA_MAX_BOSQUE = NIVEL_ROCA - 1.0f;
+
+    
     // --- CICLO DE DÍA Y NOCHE ---
     public static final float VELOCIDAD_TIEMPO = 0.001745f;
     
