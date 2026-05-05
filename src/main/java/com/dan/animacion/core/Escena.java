@@ -58,11 +58,15 @@ public class Escena implements GLEventListener {
         camara.procesarEntrada(estadoEntrada);
         nieve.actualizar(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
-        rendererEntorno.aplicar(gl, ciclo);
+        rendererEntorno.prepararCielo(gl, ciclo);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
         camara.aplicarTransformaciones(gl);
+
+        rendererEntorno.aplicarIluminacionYAstros(gl, ciclo,
+                camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
+
         rendererTerreno.dibujar(gl, terreno);
         rendererNieve.dibujar(gl, nieve);
     }
