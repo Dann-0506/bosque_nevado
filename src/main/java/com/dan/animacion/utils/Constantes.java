@@ -31,8 +31,17 @@ public final class Constantes {
     public static final float[] COLOR_PASTO = {0.2f, 0.4f, 0.2f};
     public static final float[] COLOR_ARENA = {0.7f, 0.7f, 0.5f};
 
+    // Niebla
+    public static final float DENSIDAD_NIEBLA = 0.010f;
 
-    // --- GENERACIÓN DEL BOSQUE ---
+    // Nieve
+    public static final int   CANTIDAD_PARTICULAS_NIEVE = 9000;
+    public static final float VELOCIDAD_NIEVE = 0.05f;
+    public static final float RADIO_NIEVE = 80.0f;
+    public static final float ALTURA_NIEVE = 30.0f;
+
+
+    // --- Generación del bosque ---
     public static final int CANTIDAD_ARBOLES = 4000;
     public static final int MAX_INTENTOS_BOSQUE = 80000;
     public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
@@ -42,7 +51,7 @@ public final class Constantes {
     public static final float ALTURA_MAX_BOSQUE = NIVEL_ROCA - 1.0f;
 
     
-    // --- CICLO DE DÍA Y NOCHE ---
+    // --- Ciclo día y noche ---
     public static final float VELOCIDAD_TIEMPO = 0.001745f;
     
     // Iluminación: Día
