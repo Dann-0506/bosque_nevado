@@ -72,7 +72,7 @@ Los bosques se generan en manchas compactas usando una segunda capa de ruido Sim
 | `ALTURA_MAXIMA_TERRENO` | 50 | Altura máxima en unidades |
 | `ESCALA_RUIDO` | 0.015 | Frecuencia base del FBM |
 | `EXPONENTE_EROSION` | 2.5 | Controla la forma de las montañas |
-| `CANTIDAD_ARBOLES` | 2000 | Árboles a colocar en el mundo |
+| `CANTIDAD_ARBOLES` | 4000 | Árboles a colocar en el mundo |
 | `ESCALA_DENSIDAD_BOSQUE` | 0.025 | Tamaño de los parches forestales |
 | `UMBRAL_DENSIDAD_BOSQUE` | 0.0 | Fracción del mapa cubierta por bosque |
 | `VELOCIDAD_TIEMPO` | 0.001745 | Velocidad del ciclo de día y noche |
