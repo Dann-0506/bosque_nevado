@@ -20,7 +20,7 @@ public class Main {
         window.setFullscreen(true);
 
         EstadoEntrada estadoEntrada = new EstadoEntrada();
-        Camara camara = new Camara(0.0f, -5.0f, -60.0f);
+        Camara camara = new Camara(-18.9f, -10.0f, -31.2f);
         Escena escena = new Escena(camara, estadoEntrada);
         Panel controlador = new Panel(estadoEntrada, window);
 

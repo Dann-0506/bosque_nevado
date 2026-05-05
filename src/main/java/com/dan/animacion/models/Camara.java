@@ -32,13 +32,11 @@ public class Camara {
         if (estado.teclas[KeyEvent.VK_D]) { x -= cos * Constantes.VELOCIDAD_CAMARA; z -= sin * Constantes.VELOCIDAD_CAMARA; }
         if (estado.teclas[KeyEvent.VK_Q]) y -= Constantes.VELOCIDAD_CAMARA;
         if (estado.teclas[KeyEvent.VK_E]) y += Constantes.VELOCIDAD_CAMARA;
-
-        System.out.printf("POS: (%.1f, %.1f, %.1f)%n", getMundoX(), getMundoY(), getMundoZ());
     }
 
-    public float getMundoX() { return -x; }
-    public float getMundoY() { return -y; }
-    public float getMundoZ() { return -z; }
+    public float getMundoX() {return -x;}
+    public float getMundoY() {return -y;}
+    public float getMundoZ() {return -z;}
 
     public void aplicarTransformaciones(GL2 gl) {
         gl.glRotated(rotX, 1.0, 0.0, 0.0);
