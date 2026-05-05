@@ -1,6 +1,6 @@
 package com.dan.animacion.models;
 
-import com.dan.animacion.input.EstadoEntrada;
+import com.dan.animacion.input.EstadoInput;
 import com.dan.animacion.utils.Constantes;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.opengl.GL2;
@@ -17,7 +17,7 @@ public class Camara {
         this.z = z;
     }
 
-    public void procesarEntrada(EstadoEntrada estado) {
+    public void procesarEntrada(EstadoInput estado) {
         rotY += estado.mouseDeltaX * Constantes.SENSIBILIDAD_RATON;
         rotX += estado.mouseDeltaY * Constantes.SENSIBILIDAD_RATON;
         rotX = Math.max(-90.0f, Math.min(90.0f, rotX));
