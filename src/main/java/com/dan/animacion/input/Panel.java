@@ -13,6 +13,7 @@ public class Panel implements KeyListener, MouseListener {
     private boolean mouseCapturado = true;
     private int lastX, lastY;
     private boolean primerMovimiento = true;
+    private boolean ignorarWarp = false;
 
     public Panel(EstadoEntrada estado, GLWindow window) {
         this.estado = estado;
@@ -47,10 +48,12 @@ public class Panel implements KeyListener, MouseListener {
         int x = e.getX();
         int y = e.getY();
 
-        if (primerMovimiento) {
+        if (primerMovimiento || ignorarWarp) {
             lastX = x;
             lastY = y;
             primerMovimiento = false;
+            ignorarWarp = false;
+            return;
         }
 
         int deltaX = x - lastX;
@@ -67,9 +70,10 @@ public class Panel implements KeyListener, MouseListener {
             y < margen || y > window.getHeight() - margen) {
             int cx = window.getWidth() / 2;
             int cy = window.getHeight() / 2;
-            window.warpPointer(cx, cy);
+            ignorarWarp = true;
             lastX = cx;
             lastY = cy;
+            window.warpPointer(cx, cy);
         }
     }
 
