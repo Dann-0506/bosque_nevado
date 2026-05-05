@@ -1,6 +1,5 @@
-package com.dan.animacion.core;
+package com.dan.animacion.input;
 
-import com.dan.animacion.models.Camara;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
@@ -8,23 +7,21 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 
 public class Panel implements KeyListener, MouseListener {
-    private Camara camara;
-    private GLWindow window;
+    private final EstadoEntrada estado;
+    private final GLWindow window;
 
     private boolean mouseCapturado = true;
     private int lastX, lastY;
     private boolean primerMovimiento = true;
 
-    public Panel(Camara camara, GLWindow window) {
-        this.camara = camara;
+    public Panel(EstadoEntrada estado, GLWindow window) {
+        this.estado = estado;
         this.window = window;
     }
 
-    // --- Manejo del teclado ---
     @Override
     public void keyPressed(KeyEvent e) {
-        camara.registrarTeclaPresionada(e.getKeyCode());
-
+        estado.registrarTeclaPresionada(e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_M || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             mouseCapturado = !mouseCapturado;
             window.setPointerVisible(!mouseCapturado);
@@ -35,13 +32,12 @@ public class Panel implements KeyListener, MouseListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        camara.registrarTeclaSoltada(e.getKeyCode());
+        estado.registrarTeclaSoltada(e.getKeyCode());
     }
 
-    // --- Manejo del mouse ---
     @Override
     public void mouseMoved(MouseEvent e) { procesarMouse(e); }
-    
+
     @Override
     public void mouseDragged(MouseEvent e) { procesarMouse(e); }
 
@@ -59,25 +55,21 @@ public class Panel implements KeyListener, MouseListener {
 
         int deltaX = x - lastX;
         int deltaY = y - lastY;
-
         lastX = x;
         lastY = y;
 
         if (deltaX != 0 || deltaY != 0) {
-            camara.acumularMovimientoRaton(deltaX, deltaY);
+            estado.acumularMouse(deltaX, deltaY);
         }
 
         int margen = 100;
         if (x < margen || x > window.getWidth() - margen ||
             y < margen || y > window.getHeight() - margen) {
-            
-            int centroX = window.getWidth() / 2;
-            int centroY = window.getHeight() / 2;
-
-            window.warpPointer(centroX, centroY);
-
-            lastX = centroX;
-            lastY = centroY;
+            int cx = window.getWidth() / 2;
+            int cy = window.getHeight() / 2;
+            window.warpPointer(cx, cy);
+            lastX = cx;
+            lastY = cy;
         }
     }
 

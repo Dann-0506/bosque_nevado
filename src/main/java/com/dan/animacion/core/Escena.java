@@ -1,8 +1,11 @@
 package com.dan.animacion.core;
 
+import com.dan.animacion.input.EstadoEntrada;
 import com.dan.animacion.models.Camara;
 import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.Terreno;
+import com.dan.animacion.render.RendererEntorno;
+import com.dan.animacion.render.RendererTerreno;
 import com.dan.animacion.utils.Constantes;
 
 import com.jogamp.opengl.GL;
@@ -12,14 +15,20 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 public class Escena implements GLEventListener {
-    private Terreno terreno;
-    private CicloDiaNoche ciclo;
-    private Camara camara;
+    private final Camara camara;
+    private final EstadoEntrada estadoEntrada;
+    private final Terreno terreno;
+    private final CicloDiaNoche ciclo;
+    private final RendererEntorno rendererEntorno;
+    private final RendererTerreno rendererTerreno;
 
-    public Escena(Camara camaraCompartida) {
-        this.camara = camaraCompartida;
+    public Escena(Camara camara, EstadoEntrada estadoEntrada) {
+        this.camara = camara;
+        this.estadoEntrada = estadoEntrada;
         this.terreno = new Terreno(Constantes.TAMANO_MUNDO, Constantes.TAMANO_CELDA);
         this.ciclo = new CicloDiaNoche();
+        this.rendererEntorno = new RendererEntorno();
+        this.rendererTerreno = new RendererTerreno();
     }
 
     @Override
@@ -38,15 +47,14 @@ public class Escena implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
 
         ciclo.actualizar();
-        ciclo.aplicarEntorno(gl);
+        camara.procesarEntrada(estadoEntrada);
 
+        rendererEntorno.aplicar(gl, ciclo);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
-        
-        camara.procesarEntrada();
-        camara.aplicarTransformaciones(gl);
 
-        terreno.dibujar(gl);
+        camara.aplicarTransformaciones(gl);
+        rendererTerreno.dibujar(gl, terreno);
     }
 
     @Override
@@ -54,10 +62,9 @@ public class Escena implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         GLU glu = new GLU();
         if (height <= 0) height = 1;
-        final float aspecto = (float) width / (float) height;
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, aspecto, 1.0, 1000.0);
+        glu.gluPerspective(45.0f, (float) width / height, 1.0, 1000.0);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
     }

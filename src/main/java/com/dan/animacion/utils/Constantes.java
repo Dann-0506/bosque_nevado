@@ -7,6 +7,11 @@ public final class Constantes {
     // --- CONFIGURACIÓN DEL MUNDO ---
     public static final float TAMANO_MUNDO = 200.0f;
     public static final float TAMANO_CELDA = 1.0f;
+
+
+    // --- CÁMARA ---
+    public static final float VELOCIDAD_CAMARA = 0.5f;
+    public static final float SENSIBILIDAD_RATON = 0.1f;
     
 
     // --- GENERACIÓN DEL TERRENO ---
@@ -28,8 +33,8 @@ public final class Constantes {
 
 
     // --- GENERACIÓN DEL BOSQUE ---
-    public static final int CANTIDAD_ARBOLES = 2000;
-    public static final int MAX_INTENTOS_BOSQUE = 40000;
+    public static final int CANTIDAD_ARBOLES = 4000;
+    public static final int MAX_INTENTOS_BOSQUE = 80000;
     public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
     public static final float UMBRAL_DENSIDAD_BOSQUE = 0.0f;
     public static final float OFFSET_RUIDO_BOSQUE = 500.0f;
