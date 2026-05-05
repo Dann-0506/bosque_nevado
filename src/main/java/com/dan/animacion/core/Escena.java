@@ -57,7 +57,7 @@ public class Escena implements GLEventListener {
         final float aspecto = (float) width / (float) height;
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, aspecto, 1.0, 100.0);
+        glu.gluPerspective(45.0f, aspecto, 1.0, 1000.0);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
     }

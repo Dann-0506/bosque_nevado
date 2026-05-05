@@ -1,106 +1,90 @@
 package com.dan.animacion.core;
 
 import com.dan.animacion.models.Camara;
-
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.Robot;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.awt.Cursor;
-
 import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.newt.event.KeyListener;
+import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.opengl.GLWindow;
 
-
-public class Panel extends GLJPanel implements KeyListener, MouseMotionListener {
+public class Panel implements KeyListener, MouseListener {
     private Camara camara;
-    private Robot robot;
-    private boolean mouseCapturado = false;
-    private boolean ignorarProximoMovimiento = false;
+    private GLWindow window;
 
-    public Panel() {
-        this.camara = new Camara(0.0f, -15.0f, -60.0f);
+    private boolean mouseCapturado = true;
+    private int lastX, lastY;
+    private boolean primerMovimiento = true;
 
-        this.addGLEventListener(new Escena(this.camara));
-        
-        this.addKeyListener(this);
-        this.addMouseMotionListener(this);
-        this.setFocusable(true);
-        this.setFocusTraversalKeysEnabled(false);
-
-        try {
-            robot = new Robot();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public Panel(Camara camara, GLWindow window) {
+        this.camara = camara;
+        this.window = window;
     }
 
-
-    // --- MANEJO DE TECLADO ---
-    @Override public void keyTyped(java.awt.event.KeyEvent e) { }
-
-    @Override 
-    public void keyPressed(java.awt.event.KeyEvent e) {
+    // --- Manejo del teclado ---
+    @Override
+    public void keyPressed(KeyEvent e) {
         camara.registrarTeclaPresionada(e.getKeyCode());
-        // Usamos M para evitar el conflicto con GNOME que mencionaste antes
-        if (e.getKeyCode() == KeyEvent.VK_M) { 
-            alternarCapturaRaton();
+
+        if (e.getKeyCode() == KeyEvent.VK_M || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            mouseCapturado = !mouseCapturado;
+            window.setPointerVisible(!mouseCapturado);
+            window.confinePointer(mouseCapturado);
+            primerMovimiento = true;
         }
     }
 
     @Override
-    public void keyReleased(java.awt.event.KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
         camara.registrarTeclaSoltada(e.getKeyCode());
     }
 
-    // --- MANEJO DE RATÓN Y ROBOT ---
+    // --- Manejo del mouse ---
     @Override
-    public void mouseDragged(MouseEvent e) {
-        mouseMoved(e);
-    }
+    public void mouseMoved(MouseEvent e) { procesarMouse(e); }
+    
+    @Override
+    public void mouseDragged(MouseEvent e) { procesarMouse(e); }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
+    private void procesarMouse(MouseEvent e) {
         if (!mouseCapturado) return;
 
-        if (ignorarProximoMovimiento) {
-            ignorarProximoMovimiento = false;
-            return;
+        int x = e.getX();
+        int y = e.getY();
+
+        if (primerMovimiento) {
+            lastX = x;
+            lastY = y;
+            primerMovimiento = false;
         }
 
-        int centroX = this.getWidth() / 2;
-        int centroY = this.getHeight() / 2;
-        int deltaX = e.getX() - centroX;
-        int deltaY = e.getY() - centroY;
+        int deltaX = x - lastX;
+        int deltaY = y - lastY;
 
-        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
+        lastX = x;
+        lastY = y;
 
-        camara.acumularMovimientoRaton(deltaX, deltaY);
-        ignorarProximoMovimiento = true;
-        centrarRaton();
-    }
+        if (deltaX != 0 || deltaY != 0) {
+            camara.acumularMovimientoRaton(deltaX, deltaY);
+        }
 
-    private void alternarCapturaRaton() {
-        mouseCapturado = !mouseCapturado;
-        if (mouseCapturado) {
-            BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-            Cursor cursorInvisible = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "Cursor Invisible");
-            this.setCursor(cursorInvisible);
-            centrarRaton();
-        } else {
-            this.setCursor(Cursor.getDefaultCursor());
+        int margen = 100;
+        if (x < margen || x > window.getWidth() - margen ||
+            y < margen || y > window.getHeight() - margen) {
+            
+            int centroX = window.getWidth() / 2;
+            int centroY = window.getHeight() / 2;
+
+            window.warpPointer(centroX, centroY);
+
+            lastX = centroX;
+            lastY = centroY;
         }
     }
 
-    private void centrarRaton() {
-        if (robot != null && this.isShowing()) {
-            Point localizacionVentana = this.getLocationOnScreen();
-            int centroX = localizacionVentana.x + this.getWidth() / 2;
-            int centroY = localizacionVentana.y + this.getHeight() / 2;
-            robot.mouseMove(centroX, centroY);
-        }
-    }
+    @Override public void mouseClicked(MouseEvent e) { }
+    @Override public void mouseEntered(MouseEvent e) { }
+    @Override public void mouseExited(MouseEvent e) { }
+    @Override public void mousePressed(MouseEvent e) { }
+    @Override public void mouseReleased(MouseEvent e) { }
+    @Override public void mouseWheelMoved(MouseEvent e) { }
 }
