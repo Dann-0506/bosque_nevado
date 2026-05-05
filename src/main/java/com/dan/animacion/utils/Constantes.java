@@ -10,8 +10,9 @@ public final class Constantes {
 
 
     // --- CÁMARA ---
-    public static final float VELOCIDAD_CAMARA = 0.5f;
-    public static final float SENSIBILIDAD_RATON = 0.1f;
+    public static final float VELOCIDAD_CAMARA    = 0.5f;
+    public static final float SENSIBILIDAD_RATON  = 0.1f;
+    public static final float ALTURA_OJO          = 1.7f;
     
 
     // --- GENERACIÓN DEL TERRENO ---
