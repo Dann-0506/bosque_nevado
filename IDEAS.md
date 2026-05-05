@@ -6,27 +6,6 @@ Registro de ideas, mejoras pendientes y decisiones de diseño para el proyecto B
 
 ## Prioridad alta
 
-### Niebla volumétrica
-OpenGL fixed-pipeline ya incluye soporte nativo con `GL_FOG`. Con densidad exponencial y el color del cielo como color de niebla, el bosque gana profundidad y el horizonte desaparece de forma natural. Es el cambio de mayor impacto visual con menor esfuerzo.
-
-```java
-gl.glEnable(GL2.GL_FOG);
-gl.glFogi(GL2.GL_FOG_MODE, GL2.GL_EXP2);
-gl.glFogf(GL2.GL_FOG_DENSITY, 0.012f);
-gl.glFogfv(GL2.GL_FOG_COLOR, colorCielo, 0);
-```
-
-El color de la niebla debería sincronizarse con `CicloDiaNoche` para que cambie con el atardecer y la noche.
-
----
-
-### Nieve cayendo (partículas)
-Sistema de partículas simple: pool de ~2000 puntos con posición aleatoria sobre la cámara, caída constante en Y con pequeño movimiento lateral usando una función seno basada en el tiempo. Al tocar el terreno, la partícula se reinicia en la parte superior.
-
-No requiere física compleja. Con `GL_POINTS` y tamaño de punto ~2px da un resultado convincente. La densidad debería aumentar durante la noche.
-
----
-
 ### Montañas en el horizonte
 Generar un segundo heightmap de baja resolución con escala de ruido mucho menor (frecuencia más baja, montañas más anchas) como telón de fondo estático. Renderizarlo antes que el terreno principal, desplazado lejos de la cámara, sin árboles.
 
@@ -66,6 +45,7 @@ Una elipse oscura semitransparente en el suelo bajo cada árbol. Es una sombra f
 El pipeline fijo (GL2) limita la calidad visual. Con shaders se habilitan:
 
 - **Iluminación per-pixel (Phong/Blinn-Phong)** — actualmente es per-vertex, lo que produce artefactos en polígonos grandes.
+- **Niebla basada en altura Y** — independiente de la posición de la cámara, niebla volumétrica real.
 - **Normal mapping** — detalle de superficie sin geometría adicional.
 - **Atmospheric scattering** — cielo físicamente plausible con gradiente horizon/zenith.
 - **SSAO** — oclusión ambiental en tiempo real para dar profundidad a las zonas bajo los árboles.
@@ -80,7 +60,7 @@ Actualmente el terreno envía ~160k vértices a la GPU en cada frame con `glBegi
 ---
 
 ### Instanced rendering para los árboles
-En lugar de llamar `dibujarArbol()` 2000 veces, enviar la geometría del árbol una vez y la lista de transformaciones (posición, escala) en un buffer. Con `glDrawArraysInstanced` (requiere GL3.3) todo el bosque se dibuja en una sola llamada.
+En lugar de llamar `dibujarArbol()` 4000 veces, enviar la geometría del árbol una vez y la lista de transformaciones (posición, escala) en un buffer. Con `glDrawArraysInstanced` (requiere GL3.3) todo el bosque se dibuja en una sola llamada.
 
 ---
 
