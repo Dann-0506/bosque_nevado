@@ -22,7 +22,7 @@ public class CicloDiaNoche {
 
         float solX = (float) Math.cos(tiempo);
         float solY = (float) Math.sin(tiempo);
-        posicionSol = new float[]{ solX, solY, 0.5f, 0.0f };
+        posicionSol = new float[]{ solX, solY, 0.0f, 0.0f };
 
         if (solY > 0.3f) {
             colorCielo = Constantes.CIELO_DIA;
