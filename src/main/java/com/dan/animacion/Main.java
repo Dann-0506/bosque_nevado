@@ -1,7 +1,8 @@
 package com.dan.animacion;
 
 import com.dan.animacion.core.Escena;
-import com.dan.animacion.core.Panel;
+import com.dan.animacion.input.EstadoEntrada;
+import com.dan.animacion.input.Panel;
 import com.dan.animacion.models.Camara;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
@@ -14,13 +15,14 @@ public class Main {
         GLCapabilities caps = new GLCapabilities(profile);
 
         GLWindow window = GLWindow.create(caps);
-        window.setTitle("Bosque Nevado - Motor NEWT");
+        window.setTitle("Bosque Nevado");
         window.setSize(800, 600);
         window.setFullscreen(true);
 
+        EstadoEntrada estadoEntrada = new EstadoEntrada();
         Camara camara = new Camara(0.0f, -15.0f, -60.0f);
-        Escena escena = new Escena(camara);
-        Panel controlador = new Panel(camara, window);
+        Escena escena = new Escena(camara, estadoEntrada);
+        Panel controlador = new Panel(estadoEntrada, window);
 
         window.addGLEventListener(escena);
         window.addKeyListener(controlador);
