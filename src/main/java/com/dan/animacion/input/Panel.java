@@ -13,6 +13,7 @@ public class Panel implements KeyListener, MouseListener {
     private boolean mouseCapturado = true;
     private int lastX, lastY;
     private boolean primerMovimiento = true;
+    private boolean ignorarWarp = false;
 
     public Panel(EstadoEntrada estado, GLWindow window) {
         this.estado = estado;
@@ -22,7 +23,10 @@ public class Panel implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         estado.registrarTeclaPresionada(e.getKeyCode());
-        if (e.getKeyCode() == KeyEvent.VK_M || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            estado.salirSolicitado = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_M) {
             mouseCapturado = !mouseCapturado;
             window.setPointerVisible(!mouseCapturado);
             window.confinePointer(mouseCapturado);
@@ -36,10 +40,10 @@ public class Panel implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) { procesarMouse(e); }
+    public void mouseMoved(MouseEvent e) {procesarMouse(e);}
 
     @Override
-    public void mouseDragged(MouseEvent e) { procesarMouse(e); }
+    public void mouseDragged(MouseEvent e) {procesarMouse(e);}
 
     private void procesarMouse(MouseEvent e) {
         if (!mouseCapturado) return;
@@ -47,10 +51,12 @@ public class Panel implements KeyListener, MouseListener {
         int x = e.getX();
         int y = e.getY();
 
-        if (primerMovimiento) {
+        if (primerMovimiento || ignorarWarp) {
             lastX = x;
             lastY = y;
             primerMovimiento = false;
+            ignorarWarp = false;
+            return;
         }
 
         int deltaX = x - lastX;
@@ -67,16 +73,17 @@ public class Panel implements KeyListener, MouseListener {
             y < margen || y > window.getHeight() - margen) {
             int cx = window.getWidth() / 2;
             int cy = window.getHeight() / 2;
-            window.warpPointer(cx, cy);
+            ignorarWarp = true;
             lastX = cx;
             lastY = cy;
+            window.warpPointer(cx, cy);
         }
     }
 
-    @Override public void mouseClicked(MouseEvent e) { }
-    @Override public void mouseEntered(MouseEvent e) { }
-    @Override public void mouseExited(MouseEvent e) { }
-    @Override public void mousePressed(MouseEvent e) { }
-    @Override public void mouseReleased(MouseEvent e) { }
-    @Override public void mouseWheelMoved(MouseEvent e) { }
+    @Override public void mouseClicked(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseWheelMoved(MouseEvent e) {}
 }
