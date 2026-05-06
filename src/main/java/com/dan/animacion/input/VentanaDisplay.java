@@ -1,35 +1,37 @@
 package com.dan.animacion.input;
 
+import com.dan.animacion.utils.Constantes;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.util.FPSAnimator;
 
 public class VentanaDisplay implements KeyListener, MouseListener {
     private final EstadoInput estado;
     private final GLWindow window;
+    private final FPSAnimator animator;
 
     private boolean mouseCapturado = true;
     private int lastX, lastY;
     private boolean primerMovimiento = true;
     private boolean ignorarWarp = false;
 
-    public VentanaDisplay(EstadoInput estado, GLWindow window) {
+    public VentanaDisplay(EstadoInput estado, GLWindow window, FPSAnimator animator) {
         this.estado = estado;
         this.window = window;
+        this.animator = animator;
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         estado.registrarTeclaPresionada(e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            estado.salirSolicitado = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_M) {
-            mouseCapturado = !mouseCapturado;
-            window.setPointerVisible(!mouseCapturado);
-            window.confinePointer(mouseCapturado);
+            estado.pausado = !estado.pausado;
+            mouseCapturado = !estado.pausado;
+            window.setPointerVisible(estado.pausado);
+            window.confinePointer(!estado.pausado);
             primerMovimiento = true;
         }
     }
@@ -80,7 +82,27 @@ public class VentanaDisplay implements KeyListener, MouseListener {
         }
     }
 
-    @Override public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (!estado.pausado) return;
+        int cx = window.getWidth()  / 2;
+        int cy = window.getHeight() / 2;
+
+        float alturaTitulo = 119.05f * Constantes.ESCALA_TITULO_PAUSA;
+        float alturaOpcion  = 119.05f * Constantes.ESCALA_OPCION_PAUSA;
+        float totalAltura   = alturaTitulo + Constantes.PADDING_MENU_PAUSA + alturaOpcion;
+        int yOpcion = (int) (cy - totalAltura / 2 + alturaOpcion / 2);
+
+        int bw = Constantes.BOTON_PAUSA_ANCHO / 2;
+        int bh = Constantes.BOTON_PAUSA_ALTO  / 2;
+        int gy = window.getHeight() - e.getY();
+
+        if (e.getX() >= cx - bw && e.getX() <= cx + bw
+                && gy >= yOpcion - bh && gy <= yOpcion + bh) {
+            animator.stop();
+            window.destroy();
+        }
+    }
     @Override public void mouseEntered(MouseEvent e) {}
     @Override public void mouseExited(MouseEvent e) {}
     @Override public void mousePressed(MouseEvent e) {}
