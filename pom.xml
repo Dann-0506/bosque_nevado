@@ -79,7 +79,6 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <outputFile>${project.build.directory}/bosque-nevado-${project.version}.jar</outputFile>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>com.dan.animacion.Main</mainClass>
@@ -102,70 +101,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <!-- Linux:   mvn package -P release-linux -->
-    <profile>
-      <id>release-linux</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>build-appimage</id>
-                <phase>package</phase>
-                <goals><goal>exec</goal></goals>
-                <configuration>
-                  <executable>bash</executable>
-                  <arguments>
-                    <argument>scripts/build-linux.sh</argument>
-                    <argument>${project.version}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- Windows: mvn package -P release-windows -->
-    <profile>
-      <id>release-windows</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>build-exe</id>
-                <phase>package</phase>
-                <goals><goal>exec</goal></goals>
-                <configuration>
-                  <executable>jpackage</executable>
-                  <arguments>
-                    <argument>--type</argument>          <argument>exe</argument>
-                    <argument>--input</argument>         <argument>${project.build.directory}</argument>
-                    <argument>--main-jar</argument>      <argument>bosque-nevado-${project.version}.jar</argument>
-                    <argument>--name</argument>          <argument>Bosque Nevado</argument>
-                    <argument>--app-version</argument>   <argument>${project.version}</argument>
-                    <argument>--dest</argument>          <argument>${project.build.directory}</argument>
-                    <argument>--win-dir-chooser</argument>
-                    <argument>--win-shortcut</argument>
-                    <argument>--win-menu</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 </project>

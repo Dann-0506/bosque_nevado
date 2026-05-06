@@ -2,50 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dan.animacion</groupId>
-  <artifactId>bosque_nevado</artifactId>
-  <name>bosque_nevado</name>
+  <artifactId>bosque-nevado</artifactId>
+  <name>bosque-nevado</name>
   <version>0.1</version>
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -76,7 +36,6 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <outputFile>${project.build.directory}/bosque-nevado-${project.version}.jar</outputFile>
               <transformers>
                 <transformer>
                   <mainClass>com.dan.animacion.Main</mainClass>
@@ -101,12 +60,6 @@
   </build>
   <profiles>
     <profile>
-      <id>release</id>
-      <properties>
-        <release.active>true</release.active>
-      </properties>
-    </profile>
-    <profile>
       <id>release-linux</id>
       <build>
         <plugins>
@@ -117,7 +70,7 @@
             <executions>
               <execution>
                 <id>build-appimage</id>
-                <phase>package</phase>
+                <phase>verify</phase>
                 <goals>
                   <goal>exec</goal>
                 </goals>
@@ -145,7 +98,7 @@
             <executions>
               <execution>
                 <id>build-exe</id>
-                <phase>package</phase>
+                <phase>verify</phase>
                 <goals>
                   <goal>exec</goal>
                 </goals>
