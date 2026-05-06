@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dan.animacion</groupId>
-  <artifactId>bosque-nevado</artifactId>
-  <name>bosque-nevado</name>
+  <artifactId>bosque_nevado</artifactId>
+  <name>bosque_nevado</name>
   <version>0.1</version>
   <build>
     <plugins>
@@ -58,77 +58,6 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>release-linux</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>build-appimage</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>bash</executable>
-                  <arguments>
-                    <argument>scripts/build-linux.sh</argument>
-                    <argument>${project.version}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>release-windows</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
-              <execution>
-                <id>build-exe</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>jpackage</executable>
-                  <arguments>
-                    <argument>--type</argument>
-                    <argument>exe</argument>
-                    <argument>--input</argument>
-                    <argument>${project.build.directory}</argument>
-                    <argument>--main-jar</argument>
-                    <argument>bosque-nevado-${project.version}.jar</argument>
-                    <argument>--name</argument>
-                    <argument>Bosque Nevado</argument>
-                    <argument>--app-version</argument>
-                    <argument>${project.version}</argument>
-                    <argument>--dest</argument>
-                    <argument>${project.build.directory}</argument>
-                    <argument>--win-dir-chooser</argument>
-                    <argument>--win-shortcut</argument>
-                    <argument>--win-menu</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <repositories>
     <repository>
       <id>jogamp-repo</id>
