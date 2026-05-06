@@ -7,6 +7,7 @@ import com.dan.animacion.models.SistemaNieve;
 import com.dan.animacion.models.Terreno;
 import com.dan.animacion.render.RendererAmbiente;
 import com.dan.animacion.render.RendererNieve;
+import com.dan.animacion.render.RendererPausa;
 import com.dan.animacion.render.RendererTerreno;
 import com.dan.animacion.utils.Constantes;
 import com.jogamp.opengl.GL;
@@ -21,9 +22,13 @@ public class Escena implements GLEventListener {
     private final Terreno terreno;
     private final CicloDiaNoche ciclo;
     private final SistemaNieve nieve;
+
     private final RendererAmbiente rendererEntorno;
     private final RendererTerreno rendererTerreno;
     private final RendererNieve rendererNieve;
+    private final RendererPausa rendererPausa;
+    
+    private int ventanaAncho = 800, ventanaAlto = 600;
 
     public Escena(Camara camara, EstadoInput estadoEntrada) {
         this.camara = camara;
@@ -34,6 +39,7 @@ public class Escena implements GLEventListener {
         this.rendererEntorno = new RendererAmbiente();
         this.rendererTerreno = new RendererTerreno();
         this.rendererNieve = new RendererNieve();
+        this.rendererPausa = new RendererPausa();
     }
 
     @Override
@@ -54,18 +60,15 @@ public class Escena implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
 
-        if (estadoEntrada.salirSolicitado) {
-            drawable.destroy();
-            return;
+        if (!estadoEntrada.pausado) {
+            ciclo.actualizar();
+            camara.procesarEntrada(estadoEntrada);
+            if (camara.isModoSuelo()) {
+                float h = terreno.calcularAltura(camara.getMundoX(), camara.getMundoZ());
+                camara.ajustarAlSuelo(h);
+            }
+            nieve.actualizar(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
         }
-
-        ciclo.actualizar();
-        camara.procesarEntrada(estadoEntrada);
-        if (camara.isModoSuelo()) {
-            float h = terreno.calcularAltura(camara.getMundoX(), camara.getMundoZ());
-            camara.ajustarAlSuelo(h);
-        }
-        nieve.actualizar(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
         rendererEntorno.prepararCielo(gl, ciclo);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -78,13 +81,19 @@ public class Escena implements GLEventListener {
 
         rendererTerreno.dibujar(gl, terreno);
         rendererNieve.dibujar(gl, nieve);
+
+        if (estadoEntrada.pausado) {
+            rendererPausa.dibujar(gl, ventanaAncho, ventanaAlto);
+        }
     }
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        if (height <= 0) height = 1;
+        this.ventanaAncho = width;
+        this.ventanaAlto = height;
         GL2 gl = drawable.getGL().getGL2();
         GLU glu = new GLU();
-        if (height <= 0) height = 1;
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         glu.gluPerspective(45.0f, (float) width / height, 1.0, 1000.0);

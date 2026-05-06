@@ -4,7 +4,7 @@ public class EstadoInput {
     public final boolean[] teclas = new boolean[512];
     public float mouseDeltaX = 0;
     public float mouseDeltaY = 0;
-    public boolean salirSolicitado = false;
+    public boolean pausado = false;
 
     public void registrarTeclaPresionada(int keyCode) {
         if (keyCode >= 0 && keyCode < teclas.length) teclas[keyCode] = true;
