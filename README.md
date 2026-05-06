@@ -30,12 +30,9 @@ El entorno transiciona suavemente a lo largo del tiempo, respondiendo dinámicam
 | **W / S** | Avanzar / Retroceder |
 | **A / D** | Desplazarse lateralmente |
 | **Mouse** | Mirar alrededor |
-| **M** | Capturar o liberar el cursor |
 | **TAB** | Alternar entre Modo Caminar y Modo Vuelo |
 | **Q / E** | Bajar / Subir (Solo disponible en Modo Vuelo) |
-| **ESC** | Cerrar la ventana |
-
-> Se debe tener cuidado al cerrar la ventana. Hay veces en que la aplicación deja un proceso corriendo en segundo plano.
+| **ESC** | Abrir / Cerrar menú de pausa |
 
 ## Detalles Técnicos
 

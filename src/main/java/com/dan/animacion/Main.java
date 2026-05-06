@@ -20,10 +20,12 @@ public class Main {
         window.setSize(800, 600);
         window.setFullscreen(true);
 
+        FPSAnimator animator = new FPSAnimator(window, 30, true);
+
         EstadoInput estadoEntrada = new EstadoInput();
         Camara camara = new Camara(-18.9f, -10.0f, -31.2f);
         Escena escena = new Escena(camara, estadoEntrada);
-        VentanaDisplay controlador = new VentanaDisplay(estadoEntrada, window);
+        VentanaDisplay controlador = new VentanaDisplay(estadoEntrada, window, animator);
 
         window.addGLEventListener(escena);
         window.addKeyListener(controlador);
@@ -33,7 +35,6 @@ public class Main {
         window.setPointerVisible(false);
         window.confinePointer(true);
 
-        FPSAnimator animator = new FPSAnimator(window, 30, true);
         animator.start();
     }
 }
