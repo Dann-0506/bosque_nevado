@@ -13,15 +13,6 @@ public final class Constantes {
     public static final float TAMANO_CELDA = 1.0f;
 
 
-    // --- CÁMARA ---
-    // VELOCIDAD_CAMARA: unidades de mundo por frame a FPS_OBJETIVO. 0.5 ≈ paso humano lento.
-    // SENSIBILIDAD_RATON: grados de rotación por píxel de desplazamiento del cursor.
-    // ALTURA_OJO: distancia en unidades sobre el suelo donde se posiciona la cámara.
-    public static final float VELOCIDAD_CAMARA = 0.5f;
-    public static final float SENSIBILIDAD_RATON = 0.1f;
-    public static final float ALTURA_OJO = 1.7f;
-
-
     // --- GENERACIÓN DEL TERRENO ---
     // ALTURA_MAXIMA_TERRENO: techo de las montañas en unidades de mundo.
     // OCTAVAS_RUIDO: capas de ruido superpuestas; más octavas = más detalle fino,
@@ -136,4 +127,15 @@ public final class Constantes {
 
     // Cuerpos celestes — color base compartido por el cuerpo y el halo de cada astro.
     public static final float[] COLOR_LUNA = {0.85f, 0.87f, 0.95f};
+
+
+    // --- CÁMARA ---
+    // VELOCIDAD_CAMARA_UPS: velocidad de movimiento en unidades de mundo por segundo. 15 ≈ paso humano lento.
+    // VELOCIDAD_CAMARA: valor por frame derivado de VELOCIDAD_CAMARA_UPS; no modificar directamente.
+    // SENSIBILIDAD_RATON: grados de rotación por píxel de desplazamiento del cursor.
+    // ALTURA_OJO: distancia en unidades sobre el suelo donde se posiciona la cámara.
+    public static final float VELOCIDAD_CAMARA_UPS = 5.0f;
+    public static final float VELOCIDAD_CAMARA = VELOCIDAD_CAMARA_UPS / FPS_OBJETIVO;
+    public static final float SENSIBILIDAD_RATON = 0.1f;
+    public static final float ALTURA_OJO = 1.7f;
 }
