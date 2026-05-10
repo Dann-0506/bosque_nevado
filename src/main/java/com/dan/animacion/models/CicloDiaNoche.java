@@ -53,8 +53,9 @@ public class CicloDiaNoche {
         };
     }
 
-    public float[] getColorCielo()    { return colorCielo; }
-    public float[] getColorSol()      { return colorSol; }
-    public float[] getColorAmbiente() { return colorAmbiente; }
-    public float[] getPosicionSol()   { return posicionSol; }
+    public float[] getColorCielo() {return colorCielo;}
+    public float[] getColorSol() {return colorSol;}
+    public float[] getColorAmbiente() {return colorAmbiente;}
+    public float[] getPosicionSol() {return posicionSol;}
+    public float getSolY() {return posicionSol[1];}
 }

@@ -51,11 +51,11 @@ public final class Constantes {
     // RADIO_NIEVE: radio del área de spawn alrededor de la cámara, en unidades de mundo.
     // ALTURA_NIEVE: altura máxima de spawn sobre la posición Y de la cámara.
     // TAMANO_PARTICULA_NIEVE: tamaño visual del copo en píxeles (glPointSize).
-    public static final int CANTIDAD_PARTICULAS_NIEVE = 9000;
+    public static final int CANTIDAD_PARTICULAS_NIEVE = 10000;
     public static final float VELOCIDAD_NIEVE = 0.05f;
     public static final float RADIO_NIEVE = 80.0f;
     public static final float ALTURA_NIEVE = 30.0f;
-    public static final float TAMANO_PARTICULA_NIEVE = 2.0f;
+    public static final float TAMANO_PARTICULA_NIEVE = 1.5f;
 
 
     // --- Generación del bosque ---
@@ -106,7 +106,7 @@ public final class Constantes {
     // FPS_OBJETIVO: framerate objetivo; usado por FPSAnimator y como base para derivar VELOCIDAD_TIEMPO.
     // DURACION_DIA_SEGUNDOS: duración de un ciclo completo de día/noche en segundos de tiempo real.
     // VELOCIDAD_TIEMPO: incremento de ángulo (radianes) por frame; derivado — no modificar directamente.
-    public static final int FPS_OBJETIVO = 30;
+    public static final int FPS_OBJETIVO = 24;
     public static final float DURACION_DIA_SEGUNDOS = 120.0f;
     public static final float VELOCIDAD_TIEMPO = (float)(2 * Math.PI) / (DURACION_DIA_SEGUNDOS * FPS_OBJETIVO);
 
@@ -127,6 +127,14 @@ public final class Constantes {
 
     // Cuerpos celestes — color base compartido por el cuerpo y el halo de cada astro.
     public static final float[] COLOR_LUNA = {0.85f, 0.87f, 0.95f};
+
+    // CANTIDAD_ESTRELLAS: puntos estelares generados proceduralmente al inicio.
+    // RADIO_ESTRELLAS: radio del domo estelar; debe ser mayor que la distancia del sol/luna (400)
+    //   y menor que el plano lejano de la cámara (1000).
+    // TAMANO_ESTRELLA: tamaño en píxeles de cada punto estelar (glPointSize).
+    public static final int CANTIDAD_ESTRELLAS = 1500;
+    public static final float RADIO_ESTRELLAS = 450.0f;
+    public static final float TAMANO_ESTRELLA = 2.0f;
 
 
     // --- CÁMARA ---
