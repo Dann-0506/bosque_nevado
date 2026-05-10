@@ -68,14 +68,26 @@ public class RendererTerreno {
     private void dibujarTronco(GL2 gl) {
         float ancho = 0.2f;
         float alto = 1.0f;
+
+        float[] nF = calcularNormal(-ancho, 0,  ancho,  ancho, 0,  ancho,  ancho, alto,  ancho); // Frontal
+        float[] nB = calcularNormal(-ancho, 0, -ancho, -ancho, alto, -ancho,  ancho, alto, -ancho); // Trasera
+        float[] nL = calcularNormal(-ancho, 0, -ancho, -ancho, 0,  ancho, -ancho, alto,  ancho); // Izquierda
+        float[] nR = calcularNormal( ancho, 0, -ancho,  ancho, alto, -ancho,  ancho, alto,  ancho); // Derecha
         
         gl.glColor3f(0.4f, 0.2f, 0.0f);
         gl.glBegin(GL2.GL_QUADS);
         
-        gl.glNormal3f( 0, 0,  1); gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(ancho, 0, ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(-ancho, alto, ancho);
-        gl.glNormal3f( 0, 0, -1); gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, alto, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, 0, -ancho);
-        gl.glNormal3f(-1, 0,  0); gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(-ancho, alto, ancho); gl.glVertex3f(-ancho, alto, -ancho);
-        gl.glNormal3f( 1, 0,  0); gl.glVertex3f(ancho, 0, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(ancho, 0, ancho);
+        gl.glNormal3fv(nF, 0);
+        gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(ancho, 0, ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(-ancho, alto, ancho);
+        
+        gl.glNormal3fv(nB, 0);
+        gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, alto, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, 0, -ancho);
+        
+        gl.glNormal3fv(nL, 0);
+        gl.glVertex3f(-ancho, 0, -ancho); gl.glVertex3f(-ancho, 0, ancho); gl.glVertex3f(-ancho, alto, ancho); gl.glVertex3f(-ancho, alto, -ancho);
+        
+        gl.glNormal3fv(nR, 0);
+        gl.glVertex3f(ancho, 0, -ancho); gl.glVertex3f(ancho, alto, -ancho); gl.glVertex3f(ancho, alto, ancho); gl.glVertex3f(ancho, 0, ancho);
         
         gl.glEnd();
     }
@@ -88,12 +100,33 @@ public class RendererTerreno {
 
     private void dibujarCapaFollaje(GL2 gl, float baseY, float alto, float ancho) {
         float puntaY = baseY + alto;
+
+        float[] nF = calcularNormal(-ancho, baseY,  ancho,  ancho, baseY,  ancho, 0, puntaY, 0); // Frontal
+        float[] nB = calcularNormal(-ancho, baseY, -ancho,  0, puntaY, 0,  ancho, baseY, -ancho); // Trasera
+        float[] nL = calcularNormal(-ancho, baseY, -ancho, -ancho, baseY,  ancho, 0, puntaY, 0); // Izquierda
+        float[] nR = calcularNormal( ancho, baseY, -ancho,  0, puntaY, 0,  ancho, baseY,  ancho); // Derecha
+
         gl.glBegin(GL2.GL_TRIANGLES);
 
-        gl.glNormal3f( 0, 0.5f,  1); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY,  ancho); gl.glVertex3f(ancho, baseY,  ancho); gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
-        gl.glNormal3f( 0, 0.5f, -1); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho); gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho);
-        gl.glNormal3f(-1, 0.5f,  0); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho); gl.glVertex3f(-ancho, baseY, ancho); gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
-        gl.glNormal3f( 1, 0.5f,  0); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho); gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0); gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, ancho);
+        gl.glNormal3fv(nF, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY,  ancho);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY,  ancho);
+        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+
+        gl.glNormal3fv(nB, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho);
+        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho);
+
+        gl.glNormal3fv(nL, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, ancho);
+        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+
+        gl.glNormal3fv(nR, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho);
+        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, ancho);
 
         gl.glEnd();
     }
