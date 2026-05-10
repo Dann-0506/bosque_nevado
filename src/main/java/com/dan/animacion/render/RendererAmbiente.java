@@ -44,7 +44,7 @@ public class RendererAmbiente {
 
         GLUquadric quadric = glu.gluNewQuadric();
 
-        // Sol — exterior a interior para blending correcto
+        // Sol
         gl.glPushMatrix();
         gl.glTranslatef(camX + posSol[0] * distancia,
                         camY + posSol[1] * distancia,
