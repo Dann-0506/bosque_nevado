@@ -46,11 +46,16 @@ public class Escena implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glEnable(GL.GL_DEPTH_TEST);
+
         gl.glEnable(GL2.GL_LIGHTING);
         gl.glShadeModel(GL2.GL_SMOOTH);
+
         gl.glEnable(GL2.GL_LIGHT0);
+
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE);
+
+        gl.glEnable(GL2.GL_NORMALIZE);
 
         gl.glEnable(GL2.GL_FOG);
         gl.glFogi(GL2.GL_FOG_MODE, GL2.GL_EXP2);
