@@ -33,13 +33,22 @@ public final class Constantes {
     // Deben mantenerse en orden ascendente: NIVEL_PASTO < NIVEL_ROCA < NIVEL_NIEVE.
     public static final float NIVEL_NIEVE = 15.0f;
     public static final float NIVEL_ROCA = 8.0f;
-    public static final float NIVEL_PASTO = 0.0f;
+    public static final float NIVEL_PASTO = 2.1f;
 
     // Colores del terreno en formato RGB normalizado {R, G, B} con valores entre 0.0 y 1.0.
     public static final float[] COLOR_NIEVE = {1.0f, 1.0f, 1.0f};
     public static final float[] COLOR_ROCA = {0.6f, 0.6f, 0.65f};
     public static final float[] COLOR_PASTO = {0.2f, 0.4f, 0.2f};
-    public static final float[] COLOR_ARENA = {0.7f, 0.7f, 0.5f};
+    public static final float[] COLOR_FONDO = {0.3f, 0.3f, 0.25f};
+
+    // NIVEL_AGUA: altura del plano de agua en unidades de mundo. Debe ser mayor que el mínimo
+    //   real del terreno (EXPONENTE_EROSION aplana los valles por encima de 0); ajustar hasta
+    //   que los lagos aparezcan en las zonas de arena. Rango útil: 2–6.
+    // COLOR_AGUA: tono azulado en RGB normalizado.
+    // ALPHA_AGUA: opacidad del plano; 0.0 = invisible, 1.0 = sólido.
+    public static final float NIVEL_AGUA  = 1.9f;
+    public static final float[] COLOR_AGUA  = {0.1f, 0.3f, 0.6f};
+    public static final float ALPHA_AGUA  = 0.75f;
 
     // DISTANCIA_NIEBLA: distancia en unidades de mundo a la que un objeto es casi invisible (5% visible).
     // DENSIDAD_NIEBLA: coeficiente derivado para GL_EXP2. No modificar directamente.
@@ -80,7 +89,7 @@ public final class Constantes {
     public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
     public static final float UMBRAL_DENSIDAD_BOSQUE = 0.0f;
     public static final float OFFSET_RUIDO_BOSQUE = 500.0f;
-    public static final float ALTURA_MIN_BOSQUE = NIVEL_PASTO + 1.0f;
+    public static final float ALTURA_MIN_BOSQUE = NIVEL_PASTO;
     public static final float ALTURA_MAX_BOSQUE = NIVEL_ROCA - 1.0f;
     public static final float ESCALA_MIN_ARBOL = 0.6f;
     public static final float ESCALA_RANGO_ARBOL = 0.8f;
@@ -159,7 +168,7 @@ public final class Constantes {
     // VELOCIDAD_CAMARA: valor por frame derivado de VELOCIDAD_CAMARA_UPS; no modificar directamente.
     // SENSIBILIDAD_RATON: grados de rotación por píxel de desplazamiento del cursor.
     // ALTURA_OJO: distancia en unidades sobre el suelo donde se posiciona la cámara.
-    public static final float VELOCIDAD_CAMARA_UPS = 3.0f;
+    public static final float VELOCIDAD_CAMARA_UPS = 5.0f;
     public static final float VELOCIDAD_CAMARA = VELOCIDAD_CAMARA_UPS / FPS_OBJETIVO;
     public static final float SENSIBILIDAD_RATON = 0.05f;
     public static final float ALTURA_OJO = 1.7f;
