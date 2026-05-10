@@ -54,7 +54,7 @@ public class Terreno {
 
             float y = calcularAltura(x, z);
             if (y > Constantes.ALTURA_MIN_BOSQUE && y < Constantes.ALTURA_MAX_BOSQUE) {
-                float escala = 0.6f + (rand.nextFloat() * 0.8f);
+                float escala = Constantes.ESCALA_MIN_ARBOL + (rand.nextFloat() * Constantes.ESCALA_RANGO_ARBOL);
                 bosque.add(new Arbol(x, y, z, escala));
                 arbolesGenerados++;
             }
@@ -76,7 +76,7 @@ public class Terreno {
         for (int i = 0; i < octavas; i++) {
             total += RuidoSimplex.evaluar(x * frecuencia, z * frecuencia) * amplitud;
             amplitudMaxima += amplitud;
-            amplitud *= 0.45f;
+            amplitud *= Constantes.PERSISTENCIA_RUIDO;
             frecuencia *= 2.0f;
         }
         return total / amplitudMaxima;
