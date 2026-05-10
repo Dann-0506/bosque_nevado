@@ -5,6 +5,7 @@ import com.dan.animacion.models.Camara;
 import com.dan.animacion.models.CicloDiaNoche;
 import com.dan.animacion.models.SistemaNieve;
 import com.dan.animacion.models.Terreno;
+import com.dan.animacion.render.RendererAgua;
 import com.dan.animacion.render.RendererAmbiente;
 import com.dan.animacion.render.RendererNieve;
 import com.dan.animacion.render.RendererPausa;
@@ -25,6 +26,7 @@ public class Escena implements GLEventListener {
 
     private final RendererAmbiente rendererEntorno;
     private final RendererTerreno rendererTerreno;
+    private final RendererAgua rendererAgua;
     private final RendererNieve rendererNieve;
     private final RendererPausa rendererPausa;
     
@@ -38,8 +40,9 @@ public class Escena implements GLEventListener {
         this.nieve = new SistemaNieve(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
         this.rendererEntorno = new RendererAmbiente();
         this.rendererTerreno = new RendererTerreno();
-        this.rendererNieve = new RendererNieve();
-        this.rendererPausa = new RendererPausa();
+        this.rendererAgua    = new RendererAgua();
+        this.rendererNieve   = new RendererNieve();
+        this.rendererPausa   = new RendererPausa();
     }
 
     @Override
@@ -85,6 +88,7 @@ public class Escena implements GLEventListener {
                 camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
         rendererTerreno.dibujar(gl, terreno, ciclo.getTiempo());
+        rendererAgua.dibujar(gl, Constantes.TAMANO_MUNDO);
         rendererNieve.dibujar(gl, nieve);
 
         if (estadoEntrada.pausado) {
