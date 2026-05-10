@@ -84,7 +84,7 @@ public class Escena implements GLEventListener {
         rendererEntorno.aplicarIluminacionYAstros(gl, ciclo,
                 camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
-        rendererTerreno.dibujar(gl, terreno);
+        rendererTerreno.dibujar(gl, terreno, ciclo.getTiempo());
         rendererNieve.dibujar(gl, nieve);
 
         if (estadoEntrada.pausado) {

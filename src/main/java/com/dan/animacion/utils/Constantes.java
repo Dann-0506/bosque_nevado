@@ -51,11 +51,15 @@ public final class Constantes {
     // RADIO_NIEVE: radio del área de spawn alrededor de la cámara, en unidades de mundo.
     // ALTURA_NIEVE: altura máxima de spawn sobre la posición Y de la cámara.
     // TAMANO_PARTICULA_NIEVE: tamaño visual del copo en píxeles (glPointSize).
+    // VELOCIDAD_DERIVA_NIEVE: desplazamiento constante por frame en la dirección del viento.
+    // AMPLITUD_DERIVA_NIEVE: amplitud de la turbulencia oscilatoria sobre la deriva base.
     public static final int CANTIDAD_PARTICULAS_NIEVE = 10000;
     public static final float VELOCIDAD_NIEVE = 0.05f;
     public static final float RADIO_NIEVE = 80.0f;
     public static final float ALTURA_NIEVE = 30.0f;
     public static final float TAMANO_PARTICULA_NIEVE = 1.5f;
+    public static final float VELOCIDAD_DERIVA_NIEVE = 0.015f;
+    public static final float AMPLITUD_DERIVA_NIEVE = 0.025f;
 
 
     // --- Generación del bosque ---
@@ -86,6 +90,19 @@ public final class Constantes {
     public static final float[] COLOR_TRONCO = {0.4f, 0.2f, 0.0f};
     public static final float[] COLOR_FOLLAJE = {0.1f, 0.4f, 0.1f};
     public static final float[] COLOR_FOLLAJE_PUNTA = {0.8f, 0.9f, 0.9f};
+
+
+    // --- Viento ---
+    // ANGULO_VIENTO: dirección del viento en radianes; 0 = norte, π/2 = este.
+    // VIENTO_X / VIENTO_Z: componentes de la dirección unitaria del viento; derivados — no modificar.
+    // AMPLITUD_VIENTO: desplazamiento máximo en unidades locales de la punta del follaje.
+    // FRECUENCIA_VIENTO: multiplicador del tiempo solar para la oscilación del follaje.
+    //   80 ≈ ciclo de ~1.5 segundos a 24 FPS. Aumentar para viento más rápido.
+    public static final float ANGULO_VIENTO = (float)(Math.PI / 4);
+    public static final float VIENTO_X = (float) Math.sin(ANGULO_VIENTO);
+    public static final float VIENTO_Z = (float) Math.cos(ANGULO_VIENTO);
+    public static final float AMPLITUD_VIENTO   = 0.2f;
+    public static final float FRECUENCIA_VIENTO = 20.0f;
 
 
     // --- Menú de pausa ---
@@ -142,8 +159,8 @@ public final class Constantes {
     // VELOCIDAD_CAMARA: valor por frame derivado de VELOCIDAD_CAMARA_UPS; no modificar directamente.
     // SENSIBILIDAD_RATON: grados de rotación por píxel de desplazamiento del cursor.
     // ALTURA_OJO: distancia en unidades sobre el suelo donde se posiciona la cámara.
-    public static final float VELOCIDAD_CAMARA_UPS = 5.0f;
+    public static final float VELOCIDAD_CAMARA_UPS = 3.0f;
     public static final float VELOCIDAD_CAMARA = VELOCIDAD_CAMARA_UPS / FPS_OBJETIVO;
-    public static final float SENSIBILIDAD_RATON = 0.1f;
+    public static final float SENSIBILIDAD_RATON = 0.05f;
     public static final float ALTURA_OJO = 1.7f;
 }
