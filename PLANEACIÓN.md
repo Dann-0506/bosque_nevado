@@ -17,18 +17,16 @@ Registro de ideas, mejoras pendientes y decisiones de diseño.
 
 ---
 
-### v0.2 — Detalle del mundo
+### v0.2 — Detalle del mundo ✓
 
-**Montañas en el horizonte**
-Generar un segundo heightmap de baja resolución con escala de ruido mucho menor (frecuencia más baja, montañas más anchas) como telón de fondo estático. Renderizarlo antes que el terreno principal, desplazado lejos de la cámara, sin árboles.
+**Estrellas de noche** ✓
+Domo de 1,500 puntos generados proceduralmente en hemisferio superior. Opacidad interpolada con el ciclo solar (`GL_POINT_SMOOTH` para distinguirlas de la nieve).
 
-Alternativamente, ajustar los parámetros del FBM del terreno actual para que en los bordes del mapa suban montañas naturalmente (aumentar `EXPONENTE_EROSION` en las zonas perimetrales).
+**Viento en los árboles** ✓
+Follaje animado con `sin(tiempo × FRECUENCIA_VIENTO + offsetViento)`. Desplazamiento graduado por capa (50/75/100%). Viento global con dirección configurable por `ANGULO_VIENTO`. Nieve afectada por el mismo vector de viento.
 
-**Estrellas de noche**
-Durante la fase nocturna del ciclo, renderizar un domo de puntos blancos en el cielo. Se pueden generar proceduralmente una sola vez al inicio: posiciones aleatorias en una esfera de radio grande centrada en el origen, dibujadas con `GL_POINTS` sin iluminación. La opacidad debería interpolarse con el ciclo (invisible en día, visibles en noche).
-
-**Viento en los árboles**
-Animar el follaje desplazando los vértices superiores de cada capa con una función `sin(tiempo + offsetPorArbol)`. El offset por árbol evita que todos se muevan en sincronía. Amplitud pequeña (0.05–0.1 unidades) para que sea sutil. Requiere pasar el tiempo actual al `RendererTerreno`.
+**Montañas en el horizonte** — descartado
+La niebla (`DISTANCIA_NIEBLA = 173`) oculta completamente cualquier geometría a partir de ~200 unidades. Un segundo heightmap nunca sería visible. Podría revisarse si se aumenta la distancia de visión en el futuro.
 
 ---
 
@@ -36,9 +34,6 @@ Animar el follaje desplazando los vértices superiores de cada capa con una func
 
 **Agua / Lagos**
 En las zonas con altura menor que `NIVEL_PASTO`, renderizar un plano translúcido azulado con `GL_BLEND`. El nivel del agua sería fijo. Con reflexión falsa (invertir la escena verticalmente bajo el plano) quedaría bastante convincente en pipeline fijo.
-
-**Sombras simples bajo los árboles**
-Una elipse oscura semitransparente en el suelo bajo cada árbol. Es una sombra falsa pero da sensación de contact shadow. Con `GL_BLEND` y un quad escalado según el tamaño del árbol.
 
 **Fogatas**
 Fogatas en puntos específicos del mapa (coordenadas fijas o generadas por seed). Cada fogata consistiría en geometría simple (troncos, brasas) y un sistema de partículas de fuego/chispa. Por la noche emitirían una luz puntual dinámica (`GL_LIGHT1`) que ilumina el terreno y árboles cercanos.
