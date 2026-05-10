@@ -7,9 +7,17 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 public class RendererTerreno {
+    private int listaTerreno = -1;
 
     public void dibujar(GL2 gl, Terreno terreno) {
-        dibujarMalla(gl, terreno);
+        if (listaTerreno == -1) {
+            listaTerreno = gl.glGenLists(1);
+            gl.glNewList(listaTerreno, GL2.GL_COMPILE);
+            dibujarMalla(gl, terreno);
+            gl.glEndList();
+        }
+        
+        gl.glCallList(listaTerreno);
         dibujarBosque(gl, terreno);
     }
 
