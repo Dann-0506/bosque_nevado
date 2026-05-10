@@ -174,7 +174,7 @@ public class RendererTerreno {
         } else if (altura > Constantes.NIVEL_PASTO) {
             gl.glColor3fv(Constantes.COLOR_PASTO, 0);
         } else {
-            gl.glColor3fv(Constantes.COLOR_ARENA, 0);
+            gl.glColor3fv(Constantes.COLOR_FONDO, 0);
         }
     }
 
