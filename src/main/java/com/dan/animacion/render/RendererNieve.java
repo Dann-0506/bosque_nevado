@@ -1,6 +1,7 @@
 package com.dan.animacion.render;
 
 import com.dan.animacion.models.SistemaNieve;
+import com.dan.animacion.utils.Constantes;
 import com.jogamp.opengl.GL2;
 
 public class RendererNieve {
@@ -12,7 +13,7 @@ public class RendererNieve {
         float[] pz = nieve.getPz();
 
         gl.glDisable(GL2.GL_LIGHTING);
-        gl.glPointSize(2.0f);
+        gl.glPointSize(Constantes.TAMANO_PARTICULA_NIEVE);
         gl.glColor3f(1.0f, 1.0f, 1.0f);
 
         gl.glBegin(GL2.GL_POINTS);
