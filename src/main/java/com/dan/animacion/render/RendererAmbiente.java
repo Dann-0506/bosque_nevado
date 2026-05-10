@@ -62,9 +62,9 @@ public class RendererAmbiente {
         gl.glTranslatef(camX - posSol[0] * distancia,
                         camY - posSol[1] * distancia,
                         camZ - posSol[2] * distancia);
-        gl.glColor4f(0.85f, 0.87f, 0.95f, 0.12f);
+        gl.glColor4f(Constantes.COLOR_LUNA[0], Constantes.COLOR_LUNA[1], Constantes.COLOR_LUNA[2], 0.12f);
         glu.gluSphere(quadric, HALO_LUNA, 16, 16);
-        gl.glColor3f(0.85f, 0.87f, 0.95f);
+        gl.glColor3fv(Constantes.COLOR_LUNA, 0);
         glu.gluSphere(quadric, RADIO_LUNA, 16, 16);
         gl.glPopMatrix();
 
