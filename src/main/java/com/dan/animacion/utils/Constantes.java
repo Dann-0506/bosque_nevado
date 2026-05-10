@@ -48,11 +48,11 @@ public final class Constantes {
     // ALPHA_AGUA: opacidad del plano; 0.0 = invisible, 1.0 = sólido.
     public static final float NIVEL_AGUA  = 1.9f;
     public static final float[] COLOR_AGUA  = {0.1f, 0.3f, 0.6f};
-    public static final float ALPHA_AGUA  = 0.75f;
+    public static final float ALPHA_AGUA  = 0.55f;
 
     // DISTANCIA_NIEBLA: distancia en unidades de mundo a la que un objeto es casi invisible (5% visible).
     // DENSIDAD_NIEBLA: coeficiente derivado para GL_EXP2. No modificar directamente.
-    public static final float DISTANCIA_NIEBLA = 173.0f;
+    public static final float DISTANCIA_NIEBLA = 100.0f;
     public static final float DENSIDAD_NIEBLA = 1.731f / DISTANCIA_NIEBLA;
 
     // CANTIDAD_PARTICULAS_NIEVE: total de copos activos simultáneamente.
