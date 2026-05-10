@@ -4,7 +4,7 @@
   <groupId>com.dan.animacion</groupId>
   <artifactId>bosque_nevado</artifactId>
   <name>bosque_nevado</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <build>
     <plugins>
       <plugin>
