@@ -82,7 +82,7 @@ public class RendererTerreno {
         float[] nL = calcularNormal(-ancho, 0, -ancho, -ancho, 0,  ancho, -ancho, alto,  ancho); // Izquierda
         float[] nR = calcularNormal( ancho, 0, -ancho,  ancho, alto, -ancho,  ancho, alto,  ancho); // Derecha
         
-        gl.glColor3f(0.4f, 0.2f, 0.0f);
+        gl.glColor3fv(Constantes.COLOR_TRONCO, 0);
         gl.glBegin(GL2.GL_QUADS);
         
         gl.glNormal3fv(nF, 0);
@@ -117,24 +117,24 @@ public class RendererTerreno {
         gl.glBegin(GL2.GL_TRIANGLES);
 
         gl.glNormal3fv(nF, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY,  ancho);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY,  ancho);
-        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(-ancho, baseY,  ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(ancho, baseY,  ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0); gl.glVertex3f(0, puntaY, 0);
 
         gl.glNormal3fv(nB, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho);
-        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(-ancho, baseY, -ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(ancho, baseY, -ancho);
 
         gl.glNormal3fv(nL, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, -ancho);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(-ancho, baseY, ancho);
-        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(-ancho, baseY, -ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(-ancho, baseY, ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0); gl.glVertex3f(0, puntaY, 0);
 
         gl.glNormal3fv(nR, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, -ancho);
-        gl.glColor3f(0.8f, 0.9f, 0.9f); gl.glVertex3f(0, puntaY, 0);
-        gl.glColor3f(0.1f, 0.4f, 0.1f); gl.glVertex3f(ancho, baseY, ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(ancho, baseY, -ancho);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0); gl.glVertex3f(0, puntaY, 0);
+        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0); gl.glVertex3f(ancho, baseY, ancho);
 
         gl.glEnd();
     }
