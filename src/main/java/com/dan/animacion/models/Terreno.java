@@ -55,7 +55,7 @@ public class Terreno {
             float y = calcularAltura(x, z);
             if (y > Constantes.ALTURA_MIN_BOSQUE && y < Constantes.ALTURA_MAX_BOSQUE) {
                 float escala = Constantes.ESCALA_MIN_ARBOL + (rand.nextFloat() * Constantes.ESCALA_RANGO_ARBOL);
-                bosque.add(new Arbol(x, y, z, escala));
+                bosque.add(new Arbol(x, y, z, escala, rand.nextFloat() * (float)(Math.PI * 2)));
                 arbolesGenerados++;
             }
         }

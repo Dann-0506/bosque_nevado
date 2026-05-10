@@ -26,7 +26,10 @@ public class SistemaNieve {
 
         for (int i = 0; i < N; i++) {
             py[i] -= Constantes.VELOCIDAD_NIEVE;
-            px[i] += (float) Math.sin(tiempo + fase[i]) * 0.025f;
+            float oscilacion = (float) Math.sin(tiempo + fase[i]);
+            float deriva = Constantes.VELOCIDAD_DERIVA_NIEVE + oscilacion * Constantes.AMPLITUD_DERIVA_NIEVE;
+            px[i] += Constantes.VIENTO_X * deriva;
+            pz[i] += Constantes.VIENTO_Z * deriva;
 
             if (py[i] < Constantes.NIVEL_PASTO) {
                 spawnaleatorio(i, cx, cy, cz);
