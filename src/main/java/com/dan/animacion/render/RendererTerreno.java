@@ -41,13 +41,13 @@ public class RendererTerreno {
 
                 float[] n1 = calcularNormal(mx, y1, mz,  mx, y4, mz + celda,  mx + celda, y2, mz);
                 gl.glNormal3f(n1[0], n1[1], n1[2]);
-                asignarColor(gl, y1); gl.glVertex3f(mx,        y1, mz);
-                asignarColor(gl, y4); gl.glVertex3f(mx,        y4, mz + celda);
+                asignarColor(gl, y1); gl.glVertex3f(mx, y1, mz);
+                asignarColor(gl, y4); gl.glVertex3f(mx, y4, mz + celda);
                 asignarColor(gl, y2); gl.glVertex3f(mx + celda, y2, mz);
 
                 float[] n2 = calcularNormal(mx, y4, mz + celda,  mx + celda, y3, mz + celda,  mx + celda, y2, mz);
                 gl.glNormal3f(n2[0], n2[1], n2[2]);
-                asignarColor(gl, y4); gl.glVertex3f(mx,        y4, mz + celda);
+                asignarColor(gl, y4); gl.glVertex3f(mx, y4, mz + celda);
                 asignarColor(gl, y3); gl.glVertex3f(mx + celda, y3, mz + celda);
                 asignarColor(gl, y2); gl.glVertex3f(mx + celda, y2, mz);
             }
