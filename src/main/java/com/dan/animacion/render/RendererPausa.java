@@ -41,7 +41,7 @@ public class RendererPausa {
         float totalAltura   = alturaTitulo + Constantes.PADDING_MENU_PAUSA + alturaOpcion;
 
         int yTitulo = (int) (cy + totalAltura / 2 - alturaTitulo / 2);
-        int yOpcion  = (int) (cy - totalAltura / 2 + alturaOpcion  / 2);
+        int yOpcion = (int) (cy - totalAltura / 2 + alturaOpcion  / 2);
 
         dibujarTexto(gl, "PAUSA", cx, yTitulo, Constantes.ESCALA_TITULO_PAUSA);
         dibujarTexto(gl, "SALIR", cx, yOpcion,  Constantes.ESCALA_OPCION_PAUSA);
