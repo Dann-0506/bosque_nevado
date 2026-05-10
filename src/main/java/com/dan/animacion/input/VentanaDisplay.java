@@ -16,7 +16,8 @@ public class VentanaDisplay implements KeyListener, MouseListener {
     private boolean mouseCapturado = true;
     private int lastX, lastY;
     private boolean primerMovimiento = true;
-    private boolean ignorarWarp = false;
+    private boolean estandoEnWarp = false;
+    private int warpX, warpY;
 
     public VentanaDisplay(EstadoInput estado, GLWindow window, FPSAnimator animator) {
         this.estado = estado;
@@ -53,11 +54,17 @@ public class VentanaDisplay implements KeyListener, MouseListener {
         int x = e.getX();
         int y = e.getY();
 
-        if (primerMovimiento || ignorarWarp) {
+        if (primerMovimiento) {
             lastX = x;
             lastY = y;
             primerMovimiento = false;
-            ignorarWarp = false;
+            return;
+        }
+
+        if (estandoEnWarp && x == warpX && y == warpY) {
+            lastX = x;
+            lastY = y;
+            estandoEnWarp = false;
             return;
         }
 
@@ -73,12 +80,10 @@ public class VentanaDisplay implements KeyListener, MouseListener {
         int margen = 100;
         if (x < margen || x > window.getWidth() - margen ||
             y < margen || y > window.getHeight() - margen) {
-            int cx = window.getWidth() / 2;
-            int cy = window.getHeight() / 2;
-            ignorarWarp = true;
-            lastX = cx;
-            lastY = cy;
-            window.warpPointer(cx, cy);
+            warpX = window.getWidth() / 2;
+            warpY = window.getHeight() / 2;
+            estandoEnWarp = true;
+            window.warpPointer(warpX, warpY);
         }
     }
 
