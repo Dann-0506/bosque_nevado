@@ -97,13 +97,6 @@ public final class Constantes {
     public static final float ESCALA_RANGO_ARBOL = 0.6f;
     public static final float OFFSET_Y_ARBOL = 2.0f;
 
-    // Colores de los árboles en formato RGB normalizado {R, G, B}.
-    // COLOR_FOLLAJE_PUNTA representa la nieve acumulada en la punta de cada capa del follaje.
-    public static final float[] COLOR_TRONCO = {0.4f, 0.2f, 0.0f};
-    public static final float[] COLOR_FOLLAJE = {0.1f, 0.4f, 0.1f};
-    public static final float[] COLOR_FOLLAJE_PUNTA = {0.8f, 0.9f, 0.9f};
-
-
     // --- Viento ---
     // ANGULO_VIENTO: dirección del viento en radianes; 0 = norte, π/2 = este.
     // VIENTO_X / VIENTO_Z: componentes de la dirección unitaria del viento; derivados — no modificar.
