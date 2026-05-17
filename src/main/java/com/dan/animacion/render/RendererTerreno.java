@@ -29,7 +29,7 @@ public class RendererTerreno {
     }
 
     private void construirListaArbol(GL2 gl) {
-        List<CargadorOBJ.Grupo> grupos = CargadorOBJ.cargar("/models/tree.obj", "/models/tree.mtl");
+        List<CargadorOBJ.Grupo> grupos = CargadorOBJ.cargar("/models/trees/tree.obj", "/models/trees/tree.mtl");
         listaArbol = gl.glGenLists(1);
         gl.glNewList(listaArbol, GL2.GL_COMPILE);
         for (CargadorOBJ.Grupo grupo : grupos) {
