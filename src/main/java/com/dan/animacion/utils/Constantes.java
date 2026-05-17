@@ -23,7 +23,7 @@ public final class Constantes {
     //   Valores > 1 aplastan los valles y exageran las cimas; 1.0 desactiva el efecto.
     // PERSISTENCIA_RUIDO: factor por el que se multiplica la amplitud en cada octava del FBM.
     //   Rango (0, 1): valores cercanos a 1 dan más peso al detalle fino; cercanos a 0 lo suprimen.
-    public static final float ALTURA_MAXIMA_TERRENO = 50.0f;
+    public static final float ALTURA_MAXIMA_TERRENO = 80.0f;
     public static final int OCTAVAS_RUIDO = 5;
     public static final float ESCALA_RUIDO = 0.015f;
     public static final float EXPONENTE_EROSION = 2.5f;
@@ -31,15 +31,15 @@ public final class Constantes {
 
     // Biomas — definen a qué altura cambia el color del terreno.
     // Deben mantenerse en orden ascendente: NIVEL_PASTO < NIVEL_ROCA < NIVEL_NIEVE.
-    public static final float NIVEL_NIEVE = 15.0f;
-    public static final float NIVEL_ROCA = 8.0f;
+    public static final float NIVEL_NIEVE = 24.0f;
+    public static final float NIVEL_ROCA = 13.0f;
     public static final float NIVEL_PASTO = 2.1f;
 
     // Colores del terreno en formato RGB normalizado {R, G, B} con valores entre 0.0 y 1.0.
-    public static final float[] COLOR_NIEVE = {1.0f, 1.0f, 1.0f};
-    public static final float[] COLOR_ROCA = {0.6f, 0.6f, 0.65f};
-    public static final float[] COLOR_PASTO = {0.2f, 0.4f, 0.2f};
-    public static final float[] COLOR_FONDO = {0.3f, 0.3f, 0.25f};
+    public static final float[] COLOR_NIEVE = {0.88f, 0.92f, 0.96f};
+    public static final float[] COLOR_ROCA  = {0.32f, 0.26f, 0.24f};
+    public static final float[] COLOR_PASTO = {0.059f, 0.188f, 0.122f};
+    public static final float[] COLOR_FONDO = {0.204f, 0.098f, 0.114f};
 
     // NIVEL_AGUA: altura del plano de agua en unidades de mundo. Debe ser mayor que el mínimo
     //   real del terreno (EXPONENTE_EROSION aplana los valles por encima de 0); ajustar hasta
@@ -47,8 +47,8 @@ public final class Constantes {
     // COLOR_AGUA: tono azulado en RGB normalizado.
     // ALPHA_AGUA: opacidad del plano; 0.0 = invisible, 1.0 = sólido.
     public static final float NIVEL_AGUA  = 1.9f;
-    public static final float[] COLOR_AGUA  = {0.1f, 0.3f, 0.6f};
-    public static final float ALPHA_AGUA  = 0.55f;
+    public static final float[] COLOR_AGUA  = {0.04f, 0.11f, 0.20f};
+    public static final float ALPHA_AGUA  = 0.65f;
 
     // DISTANCIA_NIEBLA: distancia en unidades de mundo a la que un objeto es casi invisible (5% visible).
     // DENSIDAD_NIEBLA: coeficiente derivado para GL_EXP2. No modificar directamente.
@@ -84,6 +84,8 @@ public final class Constantes {
     // ALTURA_MIN/MAX_BOSQUE: rango de altura válido para plantar árboles; derivado de los biomas.
     // ESCALA_MIN_ARBOL: escala mínima de un árbol. ESCALA_RANGO_ARBOL: variación aleatoria adicional.
     //   Escala final = ESCALA_MIN_ARBOL + random(0, 1) × ESCALA_RANGO_ARBOL → rango [0.6, 1.4].
+    // OFFSET_Y_ARBOL: desplazamiento vertical del modelo OBJ sobre el terreno.
+    //   Aumentar si los árboles parecen incrustados; reducir si flotan.
     public static final int CANTIDAD_ARBOLES = 4000;
     public static final int MAX_INTENTOS_BOSQUE = 80000;
     public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
@@ -91,15 +93,9 @@ public final class Constantes {
     public static final float OFFSET_RUIDO_BOSQUE = 500.0f;
     public static final float ALTURA_MIN_BOSQUE = NIVEL_PASTO;
     public static final float ALTURA_MAX_BOSQUE = NIVEL_ROCA - 1.0f;
-    public static final float ESCALA_MIN_ARBOL = 0.6f;
-    public static final float ESCALA_RANGO_ARBOL = 0.8f;
-
-    // Colores de los árboles en formato RGB normalizado {R, G, B}.
-    // COLOR_FOLLAJE_PUNTA representa la nieve acumulada en la punta de cada capa del follaje.
-    public static final float[] COLOR_TRONCO = {0.4f, 0.2f, 0.0f};
-    public static final float[] COLOR_FOLLAJE = {0.1f, 0.4f, 0.1f};
-    public static final float[] COLOR_FOLLAJE_PUNTA = {0.8f, 0.9f, 0.9f};
-
+    public static final float ESCALA_MIN_ARBOL = 0.4f;
+    public static final float ESCALA_RANGO_ARBOL = 0.6f;
+    public static final float OFFSET_Y_ARBOL = 2.0f;
 
     // --- Viento ---
     // ANGULO_VIENTO: dirección del viento en radianes; 0 = norte, π/2 = este.
@@ -137,22 +133,22 @@ public final class Constantes {
     public static final float VELOCIDAD_TIEMPO = (float)(2 * Math.PI) / (DURACION_DIA_SEGUNDOS * FPS_OBJETIVO);
 
     // Iluminación: Día
-    public static final float[] CIELO_DIA = {0.4f, 0.6f, 0.9f};
-    public static final float[] SOL_DIA = {1.0f, 1.0f, 0.9f};
-    public static final float[] AMBIENTE_DIA = {0.4f, 0.4f, 0.45f};
+    public static final float[] CIELO_DIA     = {0.32f, 0.50f, 0.72f};
+    public static final float[] SOL_DIA       = {0.95f, 0.90f, 0.78f};
+    public static final float[] AMBIENTE_DIA  = {0.18f, 0.22f, 0.20f};
 
     // Iluminación: Atardecer
-    public static final float[] CIELO_ATARDECER = {0.8f, 0.4f, 0.2f};
-    public static final float[] SOL_ATARDECER = {1.0f, 0.5f, 0.2f};
-    public static final float[] AMBIENTE_ATARDECER = {0.2f, 0.1f, 0.1f};
+    public static final float[] CIELO_ATARDECER    = {0.62f, 0.22f, 0.08f};
+    public static final float[] SOL_ATARDECER      = {0.92f, 0.42f, 0.10f};
+    public static final float[] AMBIENTE_ATARDECER = {0.15f, 0.06f, 0.04f};
 
     // Iluminación: Noche
-    public static final float[] CIELO_NOCHE = {0.05f, 0.05f, 0.15f};
-    public static final float[] SOL_NOCHE = {0.1f, 0.1f, 0.3f};
-    public static final float[] AMBIENTE_NOCHE = {0.05f, 0.05f, 0.1f};
+    public static final float[] CIELO_NOCHE    = {0.02f, 0.04f, 0.10f};
+    public static final float[] SOL_NOCHE      = {0.06f, 0.08f, 0.18f};
+    public static final float[] AMBIENTE_NOCHE = {0.02f, 0.03f, 0.03f};
 
     // Cuerpos celestes — color base compartido por el cuerpo y el halo de cada astro.
-    public static final float[] COLOR_LUNA = {0.85f, 0.87f, 0.95f};
+    public static final float[] COLOR_LUNA = {0.78f, 0.82f, 0.92f};
 
     // CANTIDAD_ESTRELLAS: puntos estelares generados proceduralmente al inicio.
     // RADIO_ESTRELLAS: radio del domo estelar; debe ser mayor que la distancia del sol/luna (400)
