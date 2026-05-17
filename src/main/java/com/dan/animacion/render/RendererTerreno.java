@@ -2,12 +2,16 @@ package com.dan.animacion.render;
 
 import com.dan.animacion.models.Arbol;
 import com.dan.animacion.models.Terreno;
+import com.dan.animacion.utils.CargadorOBJ;
 import com.dan.animacion.utils.Constantes;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
+import java.util.List;
+
 public class RendererTerreno {
     private int listaTerreno = -1;
+    private int listaArbol   = -1;
 
     public void dibujar(GL2 gl, Terreno terreno, float tiempo) {
         if (listaTerreno == -1) {
@@ -16,9 +20,29 @@ public class RendererTerreno {
             dibujarMalla(gl, terreno);
             gl.glEndList();
         }
+        if (listaArbol == -1) {
+            construirListaArbol(gl);
+        }
 
         gl.glCallList(listaTerreno);
         dibujarBosque(gl, terreno, tiempo);
+    }
+
+    private void construirListaArbol(GL2 gl) {
+        List<CargadorOBJ.Grupo> grupos = CargadorOBJ.cargar("/models/tree.obj", "/models/tree.mtl");
+        listaArbol = gl.glGenLists(1);
+        gl.glNewList(listaArbol, GL2.GL_COMPILE);
+        for (CargadorOBJ.Grupo grupo : grupos) {
+            gl.glColor3fv(grupo.color, 0);
+            gl.glBegin(GL2.GL_TRIANGLES);
+            float[] datos = grupo.datos;
+            for (int i = 0; i < datos.length; i += 6) {
+                gl.glNormal3f(datos[i + 3], datos[i + 4], datos[i + 5]);
+                gl.glVertex3f(datos[i],     datos[i + 1], datos[i + 2]);
+            }
+            gl.glEnd();
+        }
+        gl.glEndList();
     }
 
     private void dibujarMalla(GL2 gl, Terreno terreno) {
@@ -62,108 +86,17 @@ public class RendererTerreno {
     }
 
     private void dibujarArbol(GL2 gl, Arbol arbol, float tiempo) {
+        float oscilacion = (float) Math.sin(tiempo * Constantes.FRECUENCIA_VIENTO + arbol.offsetViento);
+        float lean = Constantes.AMPLITUD_VIENTO * oscilacion * 5.0f; // grados de inclinación
+
         gl.glPushMatrix();
         gl.glTranslatef(arbol.x, arbol.y, arbol.z);
+        gl.glRotatef(lean * Constantes.VIENTO_Z, 1, 0, 0);
+        gl.glRotatef(lean * Constantes.VIENTO_X, 0, 0, 1);
         gl.glScalef(arbol.escala, arbol.escala, arbol.escala);
-
-        float oscilacion = (float) Math.sin(tiempo * Constantes.FRECUENCIA_VIENTO + arbol.offsetViento);
-        float desplazX   = Constantes.VIENTO_X * Constantes.AMPLITUD_VIENTO * oscilacion;
-        float desplazZ   = Constantes.VIENTO_Z * Constantes.AMPLITUD_VIENTO * oscilacion;
-
-        dibujarTronco(gl);
-        dibujarFollaje(gl, desplazX, desplazZ);
-
+        gl.glTranslatef(0, Constantes.OFFSET_Y_ARBOL, 0);
+        gl.glCallList(listaArbol);
         gl.glPopMatrix();
-    }
-
-    private void dibujarTronco(GL2 gl) {
-        float ancho = 0.2f;
-        float alto  = 1.0f;
-
-        float[] nF = calcularNormal(-ancho, 0,  ancho,  ancho, 0,  ancho,  ancho, alto,  ancho);
-        float[] nB = calcularNormal(-ancho, 0, -ancho, -ancho, alto, -ancho,  ancho, alto, -ancho);
-        float[] nL = calcularNormal(-ancho, 0, -ancho, -ancho, 0,  ancho, -ancho, alto,  ancho);
-        float[] nR = calcularNormal( ancho, 0, -ancho,  ancho, alto, -ancho,  ancho, alto,  ancho);
-
-        gl.glColor3fv(Constantes.COLOR_TRONCO, 0);
-        gl.glBegin(GL2.GL_QUADS);
-
-        gl.glNormal3fv(nF, 0);
-        gl.glVertex3f(-ancho, 0, ancho);
-        gl.glVertex3f(ancho, 0, ancho);
-        gl.glVertex3f(ancho, alto, ancho);
-        gl.glVertex3f(-ancho, alto, ancho);
-
-        gl.glNormal3fv(nB, 0);
-        gl.glVertex3f(-ancho, 0, -ancho);
-        gl.glVertex3f(-ancho, alto, -ancho);
-        gl.glVertex3f(ancho, alto, -ancho);
-        gl.glVertex3f(ancho, 0, -ancho);
-
-        gl.glNormal3fv(nL, 0);
-        gl.glVertex3f(-ancho, 0, -ancho);
-        gl.glVertex3f(-ancho, 0, ancho);
-        gl.glVertex3f(-ancho, alto, ancho);
-        gl.glVertex3f(-ancho, alto, -ancho);
-
-        gl.glNormal3fv(nR, 0);
-        gl.glVertex3f(ancho, 0, -ancho);
-        gl.glVertex3f(ancho, alto, -ancho);
-        gl.glVertex3f(ancho, alto, ancho);
-        gl.glVertex3f(ancho, 0, ancho);
-
-        gl.glEnd();
-    }
-
-    private void dibujarFollaje(GL2 gl, float desplazX, float desplazZ) {
-        dibujarCapaFollaje(gl, 0.8f, 1.5f, 1.0f, desplazX * 0.5f, desplazZ * 0.5f);
-        dibujarCapaFollaje(gl, 1.6f, 1.2f, 0.8f, desplazX * 0.75f, desplazZ * 0.75f);
-        dibujarCapaFollaje(gl, 2.4f, 1.0f, 0.6f, desplazX, desplazZ);
-    }
-
-    private void dibujarCapaFollaje(GL2 gl, float baseY, float alto, float ancho, float puntaX, float puntaZ) {
-        float puntaY = baseY + alto;
-
-        float[] nF = calcularNormal(-ancho, baseY,  ancho,  ancho, baseY,  ancho,  puntaX, puntaY, puntaZ);
-        float[] nB = calcularNormal(-ancho, baseY, -ancho,  puntaX, puntaY, puntaZ,  ancho, baseY, -ancho);
-        float[] nL = calcularNormal(-ancho, baseY, -ancho, -ancho, baseY,  ancho,  puntaX, puntaY, puntaZ);
-        float[] nR = calcularNormal( ancho, baseY, -ancho,  puntaX, puntaY, puntaZ,  ancho, baseY,  ancho);
-
-        gl.glBegin(GL2.GL_TRIANGLES);
-
-        gl.glNormal3fv(nF, 0);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f(-ancho, baseY,  ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f( ancho, baseY,  ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0);
-        gl.glVertex3f(puntaX, puntaY, puntaZ);
-
-        gl.glNormal3fv(nB, 0);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f(-ancho, baseY, -ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0);
-        gl.glVertex3f(puntaX, puntaY, puntaZ);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f( ancho, baseY, -ancho);
-
-        gl.glNormal3fv(nL, 0);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f(-ancho, baseY, -ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f(-ancho, baseY,  ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0);
-        gl.glVertex3f(puntaX, puntaY, puntaZ);
-
-        gl.glNormal3fv(nR, 0);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f( ancho, baseY, -ancho);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE_PUNTA, 0);
-        gl.glVertex3f(puntaX, puntaY, puntaZ);
-        gl.glColor3fv(Constantes.COLOR_FOLLAJE, 0);
-        gl.glVertex3f( ancho, baseY,  ancho);
-
-        gl.glEnd();
     }
 
     private void asignarColor(GL2 gl, float altura) {
