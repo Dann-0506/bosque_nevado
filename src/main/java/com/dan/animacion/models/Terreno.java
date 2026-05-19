@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Random;
 
 public class Terreno {
+    private static final Poblado[] POBLADOS = construirPoblados();
+
+    private static Poblado[] construirPoblados() {
+        float[][] coords = Constantes.COORDENADAS_POBLADOS;
+        Poblado[] result = new Poblado[coords.length];
+        for (int i = 0; i < coords.length; i++)
+            result[i] = new Poblado(coords[i][0], coords[i][1], coords[i][2], coords[i][3], coords[i][4]);
+        return result;
+    }
+
     private final float tamanoMalla;
     private final float tamanoCelda;
     private final int verticesPorLado;
@@ -46,6 +56,14 @@ public class Terreno {
             float x = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
             float z = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
 
+            boolean enPoblado = false;
+            for (Poblado p : POBLADOS) {
+                float dxP = x - p.x;
+                float dzP = z - p.z;
+                if (dxP * dxP + dzP * dzP < p.radioTransicion * p.radioTransicion) { enPoblado = true; break; }
+            }
+            if (enPoblado) continue;
+
             float densidad = RuidoSimplex.evaluar(
                 x * Constantes.ESCALA_DENSIDAD_BOSQUE + Constantes.OFFSET_RUIDO_BOSQUE,
                 z * Constantes.ESCALA_DENSIDAD_BOSQUE + Constantes.OFFSET_RUIDO_BOSQUE
@@ -65,7 +83,32 @@ public class Terreno {
         float fbm = calcularFBM(x, z, Constantes.OCTAVAS_RUIDO, Constantes.ESCALA_RUIDO, 1.0f);
         float normalizado = (fbm + 1.0f) / 2.0f;
         float erosionado = (float) Math.pow(normalizado, Constantes.EXPONENTE_EROSION);
-        return erosionado * Constantes.ALTURA_MAXIMA_TERRENO;
+        float altura = erosionado * Constantes.ALTURA_MAXIMA_TERRENO;
+
+        float maxInfluencia = 0.0f;
+        for (Poblado p : POBLADOS) {
+            float dx = x - p.x;
+            float dz = z - p.z;
+            float dist = (float) Math.sqrt(dx * dx + dz * dz);
+            if (dist >= p.radioTransicion) continue;
+            float t = suavizar(p.radio, p.radioTransicion, dist);
+            float influencia = 1.0f - t;
+            if (influencia <= maxInfluencia) continue;
+            maxInfluencia = influencia;
+            float micro = RuidoSimplex.evaluar(
+                x * Constantes.ESCALA_VARIACION_POBLADO + Constantes.OFFSET_VARIACION_POBLADO,
+                z * Constantes.ESCALA_VARIACION_POBLADO + Constantes.OFFSET_VARIACION_POBLADO
+            ) * Constantes.AMPLITUD_VARIACION_POBLADO;
+            altura = (p.altura + micro) + (altura - (p.altura + micro)) * t;
+        }
+
+        return altura;
+    }
+
+    // Smoothstep: devuelve 0 en borde0, 1 en borde1, con curva suave entre medias.
+    private static float suavizar(float borde0, float borde1, float x) {
+        float t = Math.max(0.0f, Math.min(1.0f, (x - borde0) / (borde1 - borde0)));
+        return t * t * (3 - 2 * t);
     }
 
     private float calcularFBM(float x, float z, int octavas, float frecuenciaBase, float amplitudBase) {

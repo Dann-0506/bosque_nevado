@@ -10,7 +10,7 @@ public final class Constantes {
     //   lo que impacta el tiempo de carga y la memoria.
     // TAMANO_CELDA: tamaño de cada celda de la malla. Valores menores dan más detalle pero más vértices.
     public static final float TAMANO_MUNDO = 200.0f;
-    public static final float TAMANO_CELDA = 1.0f;
+    public static final float TAMANO_CELDA = 1f;
 
 
     // --- GENERACIÓN DEL TERRENO ---
@@ -23,11 +23,11 @@ public final class Constantes {
     //   Valores > 1 aplastan los valles y exageran las cimas; 1.0 desactiva el efecto.
     // PERSISTENCIA_RUIDO: factor por el que se multiplica la amplitud en cada octava del FBM.
     //   Rango (0, 1): valores cercanos a 1 dan más peso al detalle fino; cercanos a 0 lo suprimen.
-    public static final float ALTURA_MAXIMA_TERRENO = 80.0f;
+    public static final float ALTURA_MAXIMA_TERRENO = 100.0f;
     public static final int OCTAVAS_RUIDO = 5;
-    public static final float ESCALA_RUIDO = 0.015f;
-    public static final float EXPONENTE_EROSION = 2.5f;
-    public static final float PERSISTENCIA_RUIDO = 0.45f;
+    public static final float ESCALA_RUIDO = 0.012f;
+    public static final float EXPONENTE_EROSION = 3f;
+    public static final float PERSISTENCIA_RUIDO = 0.4f;
 
     // Biomas — definen a qué altura cambia el color del terreno.
     // Deben mantenerse en orden ascendente: NIVEL_PASTO < NIVEL_ROCA < NIVEL_NIEVE.
@@ -37,7 +37,7 @@ public final class Constantes {
 
     // Colores del terreno en formato RGB normalizado {R, G, B} con valores entre 0.0 y 1.0.
     public static final float[] COLOR_NIEVE = {0.88f, 0.92f, 0.96f};
-    public static final float[] COLOR_ROCA  = {0.32f, 0.26f, 0.24f};
+    public static final float[] COLOR_ROCA = {0.32f, 0.26f, 0.24f};
     public static final float[] COLOR_PASTO = {0.059f, 0.188f, 0.122f};
     public static final float[] COLOR_FONDO = {0.204f, 0.098f, 0.114f};
 
@@ -46,13 +46,13 @@ public final class Constantes {
     //   que los lagos aparezcan en las zonas de arena. Rango útil: 2–6.
     // COLOR_AGUA: tono azulado en RGB normalizado.
     // ALPHA_AGUA: opacidad del plano; 0.0 = invisible, 1.0 = sólido.
-    public static final float NIVEL_AGUA  = 1.9f;
-    public static final float[] COLOR_AGUA  = {0.04f, 0.11f, 0.20f};
-    public static final float ALPHA_AGUA  = 0.65f;
+    public static final float NIVEL_AGUA = 1.9f;
+    public static final float[] COLOR_AGUA = {0.04f, 0.11f, 0.20f};
+    public static final float ALPHA_AGUA = 0.65f;
 
     // DISTANCIA_NIEBLA: distancia en unidades de mundo a la que un objeto es casi invisible (5% visible).
     // DENSIDAD_NIEBLA: coeficiente derivado para GL_EXP2. No modificar directamente.
-    public static final float DISTANCIA_NIEBLA = 100.0f;
+    public static final float DISTANCIA_NIEBLA = 90.0f;
     public static final float DENSIDAD_NIEBLA = 1.731f / DISTANCIA_NIEBLA;
 
     // CANTIDAD_PARTICULAS_NIEVE: total de copos activos simultáneamente.
@@ -70,6 +70,26 @@ public final class Constantes {
     public static final float VELOCIDAD_DERIVA_NIEVE = 0.015f;
     public static final float AMPLITUD_DERIVA_NIEVE = 0.025f;
 
+
+    // --- Poblados ---
+    // COORDENADAS_POBLADOS: cada fila define un poblado con columnas { x, z, radio, radioTransicion, altura }.
+    //   radio: zona completamente plana. radioTransicion: donde termina la mezcla con el terreno normal.
+    //   altura: debe caer en el bioma pasto (NIVEL_PASTO < altura < NIVEL_ROCA).
+    // AMPLITUD_VARIACION_POBLADO: rango de la micro-variación de altura dentro de cada zona (±amplitud).
+    //   Valores pequeños (0.3–0.8) dan ondulaciones sutiles sin deshacer el efecto de aplanado.
+    // ESCALA_VARIACION_POBLADO: frecuencia del ruido de micro-variación. Mayor que ESCALA_RUIDO
+    //   para producir detalles finos en lugar de colinas.
+    // OFFSET_VARIACION_POBLADO: desplazamiento del dominio de ruido para que el patrón de
+    //   micro-variación sea independiente del terreno principal y del bosque.
+    public static final float[][] COORDENADAS_POBLADOS = {
+        //  x      z    radio  trans  altura
+        {  50f,   50f,  18f,   35f,   3.5f },
+        { -80f,   30f,  15f,   30f,   3.5f },
+        {  20f,  -90f,  15f,   30f,   3.5f },
+    };
+    public static final float AMPLITUD_VARIACION_POBLADO = 0.5f;
+    public static final float ESCALA_VARIACION_POBLADO   = 0.07f;
+    public static final float OFFSET_VARIACION_POBLADO   = 1200.0f;
 
     // --- Generación del bosque ---
     // CANTIDAD_ARBOLES: objetivo de árboles a colocar en el mapa.
@@ -89,7 +109,7 @@ public final class Constantes {
     public static final int CANTIDAD_ARBOLES = 4000;
     public static final int MAX_INTENTOS_BOSQUE = 80000;
     public static final float ESCALA_DENSIDAD_BOSQUE = 0.025f;
-    public static final float UMBRAL_DENSIDAD_BOSQUE = 0.0f;
+    public static final float UMBRAL_DENSIDAD_BOSQUE = 0.2f;
     public static final float OFFSET_RUIDO_BOSQUE = 500.0f;
     public static final float ALTURA_MIN_BOSQUE = NIVEL_PASTO;
     public static final float ALTURA_MAX_BOSQUE = NIVEL_ROCA - 1.0f;
@@ -106,7 +126,7 @@ public final class Constantes {
     public static final float ANGULO_VIENTO = (float)(Math.PI / 4);
     public static final float VIENTO_X = (float) Math.sin(ANGULO_VIENTO);
     public static final float VIENTO_Z = (float) Math.cos(ANGULO_VIENTO);
-    public static final float AMPLITUD_VIENTO   = 0.2f;
+    public static final float AMPLITUD_VIENTO   = 0.5f;
     public static final float FRECUENCIA_VIENTO = 20.0f;
 
 
@@ -133,18 +153,18 @@ public final class Constantes {
     public static final float VELOCIDAD_TIEMPO = (float)(2 * Math.PI) / (DURACION_DIA_SEGUNDOS * FPS_OBJETIVO);
 
     // Iluminación: Día
-    public static final float[] CIELO_DIA     = {0.32f, 0.50f, 0.72f};
-    public static final float[] SOL_DIA       = {0.95f, 0.90f, 0.78f};
+    public static final float[] CIELO_DIA = {0.32f, 0.50f, 0.72f};
+    public static final float[] SOL_DIA = {0.95f, 0.90f, 0.78f};
     public static final float[] AMBIENTE_DIA  = {0.18f, 0.22f, 0.20f};
 
     // Iluminación: Atardecer
-    public static final float[] CIELO_ATARDECER    = {0.62f, 0.22f, 0.08f};
-    public static final float[] SOL_ATARDECER      = {0.92f, 0.42f, 0.10f};
+    public static final float[] CIELO_ATARDECER = {0.62f, 0.22f, 0.08f};
+    public static final float[] SOL_ATARDECER = {0.92f, 0.42f, 0.10f};
     public static final float[] AMBIENTE_ATARDECER = {0.15f, 0.06f, 0.04f};
 
     // Iluminación: Noche
-    public static final float[] CIELO_NOCHE    = {0.02f, 0.04f, 0.10f};
-    public static final float[] SOL_NOCHE      = {0.06f, 0.08f, 0.18f};
+    public static final float[] CIELO_NOCHE = {0.02f, 0.04f, 0.10f};
+    public static final float[] SOL_NOCHE = {0.06f, 0.08f, 0.18f};
     public static final float[] AMBIENTE_NOCHE = {0.02f, 0.03f, 0.03f};
 
     // Cuerpos celestes — color base compartido por el cuerpo y el halo de cada astro.
