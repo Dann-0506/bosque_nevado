@@ -88,8 +88,24 @@ public final class Constantes {
         {  20f,  -90f,  15f,   30f,   3.5f },
     };
     public static final float AMPLITUD_VARIACION_POBLADO = 0.5f;
-    public static final float ESCALA_VARIACION_POBLADO   = 0.07f;
-    public static final float OFFSET_VARIACION_POBLADO   = 1200.0f;
+    public static final float ESCALA_VARIACION_POBLADO = 0.07f;
+    public static final float OFFSET_VARIACION_POBLADO = 1200.0f;
+
+    // --- Edificios ---
+    // EDIFICIOS_POR_POBLADO: número de cabañas por poblado, distribuidas en anillo alrededor del pozo.
+    // RADIO_ANILLO_CABANAS: radio del anillo como fracción del radio interior del poblado.
+    //   0.65 coloca las cabañas a 2/3 del radio, dejando espacio de plaza entre ellas y el pozo.
+    // ESCALA_EDIFICIO: factor de escala uniforme aplicado a cada cabaña.
+    // ESCALA_POZO: el modelo del pozo mide ~30 unidades de alto; a 0.16 queda ~5 unidades visibles.
+    // OFFSET_ORIENTACION_CABANA: corrección en radianes si la fachada del modelo no mira hacia el pozo.
+    //   Probar 0, π/2, π o 3π/2 hasta que las cabañas queden orientadas correctamente.
+    // VARIACION_ROTACION_CABANA: desvío aleatorio máximo (±) en radianes respecto al ángulo exacto al pozo.
+    public static final int   EDIFICIOS_POR_POBLADO = 6;
+    public static final float RADIO_ANILLO_CABANAS = 0.65f;
+    public static final float ESCALA_EDIFICIO = 0.4f;
+    public static final float ESCALA_POZO = 0.16f;
+    public static final float OFFSET_ORIENTACION_CABANA = 0.0f;
+    public static final float VARIACION_ROTACION_CABANA = (float) (Math.PI / 6);
 
     // --- Generación del bosque ---
     // CANTIDAD_ARBOLES: objetivo de árboles a colocar en el mapa.
