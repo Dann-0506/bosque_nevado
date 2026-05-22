@@ -9,6 +9,7 @@ import com.dan.animacion.render.RendererAgua;
 import com.dan.animacion.render.RendererAmbiente;
 import com.dan.animacion.render.RendererNieve;
 import com.dan.animacion.render.RendererPausa;
+import com.dan.animacion.render.RendererPoblado;
 import com.dan.animacion.render.RendererTerreno;
 import com.dan.animacion.utils.Constantes;
 import com.jogamp.opengl.GL;
@@ -26,6 +27,7 @@ public class Escena implements GLEventListener {
 
     private final RendererAmbiente rendererEntorno;
     private final RendererTerreno rendererTerreno;
+    private final RendererPoblado rendererPoblado;
     private final RendererAgua rendererAgua;
     private final RendererNieve rendererNieve;
     private final RendererPausa rendererPausa;
@@ -40,6 +42,7 @@ public class Escena implements GLEventListener {
         this.nieve = new SistemaNieve(camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
         this.rendererEntorno = new RendererAmbiente();
         this.rendererTerreno = new RendererTerreno();
+        this.rendererPoblado = new RendererPoblado();
         this.rendererAgua    = new RendererAgua();
         this.rendererNieve   = new RendererNieve();
         this.rendererPausa   = new RendererPausa();
@@ -88,6 +91,7 @@ public class Escena implements GLEventListener {
                 camara.getMundoX(), camara.getMundoY(), camara.getMundoZ());
 
         rendererTerreno.dibujar(gl, terreno, ciclo.getTiempo());
+        rendererPoblado.dibujar(gl, terreno);
         rendererAgua.dibujar(gl, Constantes.TAMANO_MUNDO);
         rendererNieve.dibujar(gl, nieve);
 
