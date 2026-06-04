@@ -9,10 +9,21 @@ import java.util.List;
 import java.util.Random;
 
 public class Terreno {
+    private static final Poblado[] POBLADOS = construirPoblados();
+
+    private static Poblado[] construirPoblados() {
+        float[][] coords = Constantes.COORDENADAS_POBLADOS;
+        Poblado[] result = new Poblado[coords.length];
+        for (int i = 0; i < coords.length; i++)
+            result[i] = new Poblado(coords[i][0], coords[i][1], coords[i][2], coords[i][3], coords[i][4]);
+        return result;
+    }
+
     private final float tamanoMalla;
     private final float tamanoCelda;
     private final int verticesPorLado;
     private final float[][] mapaAlturas;
+    private final List<Edificio> edificios;
     private final List<Arbol> bosque;
 
     public Terreno(float tamanoMalla, float tamanoCelda) {
@@ -21,6 +32,8 @@ public class Terreno {
         this.verticesPorLado = (int) ((tamanoMalla * 2) / tamanoCelda) + 1;
         this.mapaAlturas = new float[verticesPorLado][verticesPorLado];
         generarMapa();
+        this.edificios = new ArrayList<>();
+        poblarPoblados();
         this.bosque = new ArrayList<>();
         poblarBosque(Constantes.CANTIDAD_ARBOLES);
     }
@@ -35,6 +48,43 @@ public class Terreno {
         }
     }
 
+    private void poblarPoblados() {
+        Random rand = new Random();
+
+        for (Poblado p : POBLADOS) {
+            List<Edificio> enEstePoblado = new ArrayList<>();
+
+            // Pozo ligeramente descentrado para naturalidad.
+            float anguloPozo = rand.nextFloat() * (float) (2 * Math.PI);
+            float pozoX = p.x + rand.nextFloat() * (p.radio * 0.2f) * (float) Math.cos(anguloPozo);
+            float pozoZ = p.z + rand.nextFloat() * (p.radio * 0.2f) * (float) Math.sin(anguloPozo);
+            enEstePoblado.add(new Edificio(pozoX, mapaAlturas[gridIdx(pozoX)][gridIdx(pozoZ)], pozoZ,
+                Constantes.ESCALA_POZO, rand.nextFloat() * (float) (2 * Math.PI), Edificio.POZO));
+
+            // Cabañas en anillo equidistante; el anillo completo se rota aleatoriamente.
+            float radioAnillo = p.radio * Constantes.RADIO_ANILLO_CABANAS;
+            float paso = (float) (2 * Math.PI) / Constantes.EDIFICIOS_POR_POBLADO;
+            float anguloBase = rand.nextFloat() * (float) (2 * Math.PI);
+            for (int i = 0; i < Constantes.EDIFICIOS_POR_POBLADO; i++) {
+                float angulo = anguloBase + i * paso + (rand.nextFloat() - 0.5f) * (paso * 0.4f);
+                float x = pozoX + radioAnillo * (float) Math.cos(angulo);
+                float z = pozoZ + radioAnillo * (float) Math.sin(angulo);
+                float rotY = (float) Math.atan2(pozoX - x, pozoZ - z)
+                    + Constantes.OFFSET_ORIENTACION_CABANA
+                    + (rand.nextFloat() - 0.5f) * Constantes.VARIACION_ROTACION_CABANA;
+                enEstePoblado.add(new Edificio(x, mapaAlturas[gridIdx(x)][gridIdx(z)], z,
+                    Constantes.ESCALA_EDIFICIO, rotY, Edificio.CABANA));
+            }
+
+            edificios.addAll(enEstePoblado);
+        }
+    }
+
+    private int gridIdx(float coord) {
+        return Math.max(0, Math.min(verticesPorLado - 1,
+            (int) Math.round((coord + tamanoMalla) / tamanoCelda)));
+    }
+
     private void poblarBosque(int cantidadArboles) {
         Random rand = new Random();
         int arbolesGenerados = 0;
@@ -45,6 +95,14 @@ public class Terreno {
 
             float x = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
             float z = -tamanoMalla + (rand.nextFloat() * (tamanoMalla * 2));
+
+            boolean enPoblado = false;
+            for (Poblado p : POBLADOS) {
+                float dxP = x - p.x;
+                float dzP = z - p.z;
+                if (dxP * dxP + dzP * dzP < p.radioTransicion * p.radioTransicion) { enPoblado = true; break; }
+            }
+            if (enPoblado) continue;
 
             float densidad = RuidoSimplex.evaluar(
                 x * Constantes.ESCALA_DENSIDAD_BOSQUE + Constantes.OFFSET_RUIDO_BOSQUE,
@@ -65,7 +123,32 @@ public class Terreno {
         float fbm = calcularFBM(x, z, Constantes.OCTAVAS_RUIDO, Constantes.ESCALA_RUIDO, 1.0f);
         float normalizado = (fbm + 1.0f) / 2.0f;
         float erosionado = (float) Math.pow(normalizado, Constantes.EXPONENTE_EROSION);
-        return erosionado * Constantes.ALTURA_MAXIMA_TERRENO;
+        float altura = erosionado * Constantes.ALTURA_MAXIMA_TERRENO;
+
+        float maxInfluencia = 0.0f;
+        for (Poblado p : POBLADOS) {
+            float dx = x - p.x;
+            float dz = z - p.z;
+            float dist = (float) Math.sqrt(dx * dx + dz * dz);
+            if (dist >= p.radioTransicion) continue;
+            float t = suavizar(p.radio, p.radioTransicion, dist);
+            float influencia = 1.0f - t;
+            if (influencia <= maxInfluencia) continue;
+            maxInfluencia = influencia;
+            float micro = RuidoSimplex.evaluar(
+                x * Constantes.ESCALA_VARIACION_POBLADO + Constantes.OFFSET_VARIACION_POBLADO,
+                z * Constantes.ESCALA_VARIACION_POBLADO + Constantes.OFFSET_VARIACION_POBLADO
+            ) * Constantes.AMPLITUD_VARIACION_POBLADO;
+            altura = (p.altura + micro) + (altura - (p.altura + micro)) * t;
+        }
+
+        return altura;
+    }
+
+    // Smoothstep: devuelve 0 en borde0, 1 en borde1, con curva suave entre medias.
+    private static float suavizar(float borde0, float borde1, float x) {
+        float t = Math.max(0.0f, Math.min(1.0f, (x - borde0) / (borde1 - borde0)));
+        return t * t * (3 - 2 * t);
     }
 
     private float calcularFBM(float x, float z, int octavas, float frecuenciaBase, float amplitudBase) {
@@ -86,5 +169,6 @@ public class Terreno {
     public float getTamanoCelda() {return tamanoCelda;}
     public int getVerticesPorLado() {return verticesPorLado;}
     public float[][] getMapaAlturas() {return mapaAlturas;}
+    public List<Edificio> getEdificios() {return Collections.unmodifiableList(edificios);}
     public List<Arbol> getBosque() {return Collections.unmodifiableList(bosque);}
 }
