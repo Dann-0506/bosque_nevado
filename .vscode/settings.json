@@ -1,3 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.jdt.ls.java.home": "/home/dannn/.local/share/mise/installs/java/openjdk-21.0.2",
+    "java.import.gradle.java.home": "/home/dannn/.local/share/mise/installs/java/openjdk-21.0.2"
 }
